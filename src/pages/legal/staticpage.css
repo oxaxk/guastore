@@ -1,0 +1,72 @@
+/* src/pages/legal/StaticPage.css */
+
+.static-page {
+  max-width: 880px;
+  margin: 0 auto;
+  padding: clamp(7rem, 10vw, 9rem) 1.5rem clamp(4rem, 6vw, 6rem);
+  font-family: var(--font-body);
+  line-height: 1.75;
+  color: var(--color-text);
+}
+
+.static-page h1 {
+  font-family: var(--font-display);
+  font-size: clamp(2.2rem, 5vw, 3.4rem);
+  font-weight: 500;
+  line-height: 1.05;
+  letter-spacing: -0.03em;
+  margin-bottom: 1.75rem;
+  color: var(--color-text);
+}
+
+.static-page h2 {
+  font-family: var(--font-display);
+  font-size: clamp(1.35rem, 2vw, 1.7rem);
+  font-weight: 500;
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+  margin: 2.4rem 0 0.9rem;
+  color: var(--color-text);
+}
+
+.static-page p,
+.static-page li {
+  font-size: 1rem;
+  line-height: 1.8;
+  color: var(--color-text-muted);
+}
+
+.static-page p + p {
+  margin-top: 1rem;
+}
+
+.static-page ul {
+  margin: 1rem 0 1.25rem;
+  padding-left: 1.25rem;
+}
+
+.static-page li + li {
+  margin-top: 0.5rem;
+}
+
+.static-page strong {
+  color: var(--color-text);
+}
+
+/* optional, etwas Abstand zum Header/Footer */
+.static-page__container {
+  padding-top: 0;
+  padding-bottom: 0;
+}
+
+@media (max-width: 640px) {
+  .static-page {
+    padding-inline: 1.1rem;
+  }
+
+  .static-page p,
+  .static-page li {
+    font-size: 0.96rem;
+    line-height: 1.7;
+  }
+}
