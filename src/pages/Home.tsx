@@ -203,6 +203,51 @@ const GlowingEffect = memo(
 GlowingEffect.displayName = 'GlowingEffect';
 
 export default function Home() {
+  const heroStageRef = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+    let frame: number | null = null;
+
+    const updateHeroObject = () => {
+      frame = null;
+      const stage = heroStageRef.current;
+      if (!stage) return;
+
+      if (reducedMotion.matches) {
+        stage.style.setProperty('--hero-scroll-y', '0px');
+        stage.style.setProperty('--hero-scroll-rotate', '0deg');
+        return;
+      }
+
+      const rect = stage.getBoundingClientRect();
+      const viewport = window.innerHeight || 1;
+      const progress = Math.max(-1, Math.min(1, (viewport * 0.52 - rect.top) / viewport));
+      const mobile = window.matchMedia('(max-width: 768px)').matches;
+      const distance = mobile ? 18 : 44;
+      const rotation = mobile ? 1.2 : 2.8;
+
+      stage.style.setProperty('--hero-scroll-y', `${Math.round(progress * distance)}px`);
+      stage.style.setProperty('--hero-scroll-rotate', `${(progress * rotation).toFixed(2)}deg`);
+    };
+
+    const schedule = () => {
+      if (frame == null) frame = window.requestAnimationFrame(updateHeroObject);
+    };
+
+    schedule();
+    window.addEventListener('scroll', schedule, { passive: true });
+    window.addEventListener('resize', schedule);
+    reducedMotion.addEventListener('change', schedule);
+
+    return () => {
+      if (frame != null) window.cancelAnimationFrame(frame);
+      window.removeEventListener('scroll', schedule);
+      window.removeEventListener('resize', schedule);
+      reducedMotion.removeEventListener('change', schedule);
+    };
+  }, []);
+
   const featuredProducts = mockProducts
     .filter((p: any) => {
       const title = String(p?.title ?? '').toLowerCase();
@@ -632,6 +677,7 @@ export default function Home() {
               </button>
               <div
                 className="hero__image-stage"
+                ref={heroStageRef}
                 aria-hidden="true"
                 onTouchStart={handleHeroTouchStart}
                 onTouchEnd={handleHeroTouchEnd}
