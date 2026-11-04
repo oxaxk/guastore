@@ -22,7 +22,8 @@ export function scanSources(root) {
   const matches = []; let checked = 0;
   const walk = dir => {
     for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
-      if (dir === root && (['node_modules','.git','.vercel','dist','output','tmp','.playwright-cli','.codex-finalizer','__pycache__'].includes(entry.name) || entry.name.startsWith('.env'))) continue;
+      // Package-manager caches are generated dependencies, not deployable source.
+      if (dir === root && (['node_modules','.pnpm-store','.npm','.yarn','.git','.vercel','dist','output','tmp','.playwright-cli','.codex-finalizer','__pycache__'].includes(entry.name) || entry.name.startsWith('.env'))) continue;
       const full = path.join(dir, entry.name);
       if (entry.isSymbolicLink()) throw Error('Source symlinks are not allowed');
       if (entry.name.startsWith('.env')) throw Error('Nested environment source denied');
