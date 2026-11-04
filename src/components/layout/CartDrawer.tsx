@@ -8,7 +8,7 @@ import { MAX_CART_QUANTITY } from '@/lib/cart-policy';
 export default function CartDrawer() {
   const { items, isOpen, closeCart, removeItem, updateQuantity, subtotal, shipping, total, stoneCount } = useCart();
   const drawerRef = useRef<HTMLElement>(null);
-  const [checkoutState, setCheckoutState] = useState<'idle' | 'loading' | 'error'>('idle');
+  const [checkoutState, setCheckoutState] = useState<'idle' | 'loading' | 'error' | 'unavailable'>('idle');
   useEffect(() => {
     if (!isOpen) return;
     const previous = document.activeElement as HTMLElement | null;
@@ -40,7 +40,11 @@ export default function CartDrawer() {
       });
       let response = await request();
       if (response.status === 202) response = await request();
-      const body = await response.json().catch(() => null) as { url?: string } | null;
+      const body = await response.json().catch(() => null) as { url?: string; error?: string } | null;
+      if (response.status === 503 && body?.error === 'NOT_CONFIGURED') {
+        setCheckoutState('unavailable');
+        return;
+      }
       if (!response.ok || typeof body?.url !== 'string' || !body.url.startsWith('https://checkout.stripe.com/')) throw new Error('CHECKOUT_FAILED');
       window.location.assign(body.url);
     } catch {
@@ -162,10 +166,11 @@ export default function CartDrawer() {
               <p className="cart-drawer__note">
                 {stoneCount >= 2 ? 'Ab 2 Steinen ist dein Versand innerhalb Deutschlands kostenlos.' : 'Noch einen Stein hinzufügen und innerhalb Deutschlands Versandkosten sparen.'}
               </p>
-              <button className="btn btn--primary btn--full btn--lg" type="button" onClick={startCheckout} disabled={checkoutState === 'loading'}>
-                {checkoutState === 'loading' ? 'Sicherer Checkout wird geöffnet …' : 'Sicher mit Stripe bezahlen'}
+              <button className="btn btn--primary btn--full btn--lg" type="button" onClick={startCheckout} disabled={checkoutState === 'loading' || checkoutState === 'unavailable'}>
+                {checkoutState === 'loading' ? 'Sicherer Checkout wird geöffnet …' : checkoutState === 'unavailable' ? 'Checkout noch nicht freigeschaltet' : 'Sicher mit Stripe bezahlen'}
               </button>
               {checkoutState === 'error' && <p className="cart-drawer__error" role="alert">Checkout derzeit nicht erreichbar. Bitte versuche es gleich erneut.</p>}
+              {checkoutState === 'unavailable' && <p className="cart-drawer__error" role="alert">Online-Zahlungen sind noch nicht freigeschaltet. Es wurde keine Bestellung angelegt.</p>}
               <p className="cart-drawer__note">Du wirst zum sicheren Stripe-Checkout weitergeleitet. Die Bestellung wird erst nach bestätigter Zahlung verarbeitet.</p>
               <button 
                 className="btn btn--ghost btn--full"
