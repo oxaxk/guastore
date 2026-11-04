@@ -1,15 +1,22 @@
 export async function createGmailTransport(env = process.env) {
-  const user = env.GUA_GMAIL_USER;
-  const password = env.GUA_GMAIL_APP_PASSWORD;
+  // Generic SMTP is used in production (for example STRATO). The Gmail names
+  // remain supported so an existing preview configuration keeps working.
+  const user = env.GUA_SMTP_USER || env.GUA_GMAIL_USER;
+  const password = env.GUA_SMTP_PASSWORD || env.GUA_GMAIL_APP_PASSWORD;
   const from = env.GUA_MAIL_FROM || user;
-  if (typeof user !== 'string' || !user.includes('@') || typeof password !== 'string' || password.length < 12 || typeof from !== 'string' || !from.includes('@')) {
+  const host = env.GUA_SMTP_HOST || (env.GUA_GMAIL_USER ? 'smtp.gmail.com' : null);
+  const port = Number(env.GUA_SMTP_PORT || 465);
+  const secure = env.GUA_SMTP_SECURE == null ? port === 465 : env.GUA_SMTP_SECURE === 'true';
+  if (typeof user !== 'string' || !user.includes('@') || typeof password !== 'string' || password.length < 12 ||
+      typeof from !== 'string' || !from.includes('@') || typeof host !== 'string' || !/^[a-z0-9.-]+$/i.test(host) ||
+      !Number.isInteger(port) || port < 1 || port > 65535) {
     return { configured: false };
   }
   const { default: nodemailer } = await import('nodemailer');
   const smtp = nodemailer.createTransport({
-    host: 'smtp.gmail.com',
-    port: 465,
-    secure: true,
+    host,
+    port,
+    secure,
     auth: { user, pass: password },
     connectionTimeout: 5000,
     greetingTimeout: 5000,
