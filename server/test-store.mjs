@@ -4,7 +4,7 @@ import { mongoReservationStore } from './mongo-reservations.mjs';
 // The URI must refer to a dedicated GUA test cluster, never RHODIDE production.
 let cachedKey;
 let connection;
-async function initializeStore(client, databaseName) {
+export async function initializeStore(client, databaseName) {
   const db = client.db(databaseName);
   await db.collection('inventory').bulkWrite([
     { updateOne: { filter: { _id: 'the-steel' }, update: { $setOnInsert: { available: 21, reserved: 0, sold: 0 } }, upsert: true } },
@@ -15,6 +15,8 @@ async function initializeStore(client, databaseName) {
     db.collection('orders').createIndex({ reservationId: 1 }, { unique: true }),
     db.collection('mail_outbox').createIndex({ status: 1, nextAttemptAt: 1, createdAt: 1 }),
     db.collection('withdrawals').createIndex({ orderReference: 1, createdAt: 1 }),
+    db.collection('payment_conflicts').createIndex({ status: 1, createdAt: 1 }),
+    db.collection('checkout_rate_limits').createIndex({ expiresAt: 1 }, { expireAfterSeconds: 0 }),
   ]);
   return mongoReservationStore(client, databaseName);
 }
