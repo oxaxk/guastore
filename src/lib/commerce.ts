@@ -1,6 +1,6 @@
 /** Shared local catalogue / Germany shipping policy. Amounts are calculated in cents. */
-export const STEEL_PRICE_CENTS = 1290;
-export const JADE_PRICE_CENTS = 990;
+export const STEEL_PRICE_CENTS = 699;
+export const JADE_PRICE_CENTS = 599;
 export const SHIPPING_DE_CENTS = 199;
 export const FREE_SHIPPING_STONE_COUNT = 2;
 export const SHIPPING_DE_COPY = '1,99 € Versand in Deutschland · ab 2 Steinen versandkostenfrei';

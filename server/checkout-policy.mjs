@@ -1,6 +1,6 @@
 export const CATALOG = Object.freeze({
-  'the-steel': Object.freeze({ name: 'The Steel', unitAmount: 1290, initialStock: 21 }),
-  'the-jade': Object.freeze({ name: 'Xiu Jade', unitAmount: 990, initialStock: 80 }),
+  'the-steel': Object.freeze({ name: 'The Steel', unitAmount: 699, initialStock: 21 }),
+  'the-jade': Object.freeze({ name: 'Xiu Jade', unitAmount: 599, initialStock: 80 }),
 });
 
 export function validateCheckoutCart(input, stock) {

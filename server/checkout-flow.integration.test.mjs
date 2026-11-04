@@ -29,7 +29,7 @@ function stripeFixture({timeoutFirst=false}={}){
     if(url.endsWith('/v1/account'))return Response.json({id:'acct_fixture'});
     if(options.method==='GET')return Response.json(session);
     posts++;keys.push(options.headers['Idempotency-Key']);
-    if(!session)session={id:'cs_test_flow',url:'https://checkout.stripe.com/c/pay/cs_test_flow',metadata:{reservation_id:options.body.get('metadata[reservation_id]')},livemode:false,mode:'payment',currency:'eur',amount_total:2280,status:'open',payment_status:'unpaid',customer_details:{email:'test@example.invalid'}};
+    if(!session)session={id:'cs_test_flow',url:'https://checkout.stripe.com/c/pay/cs_test_flow',metadata:{reservation_id:options.body.get('metadata[reservation_id]')},livemode:false,mode:'payment',currency:'eur',amount_total:1298,status:'open',payment_status:'unpaid',customer_details:{email:'test@example.invalid'}};
     if(timeoutFirst&&posts===1)throw Error('simulated lost response after creation');
     return Response.json(session);
   };
@@ -49,7 +49,7 @@ test('actual handlers carry checkout through paid webhook and one order/outbox u
     const outcomes=await Promise.all([receiveTestWebhook(eventRequest('checkout.session.completed',stripe.session),webhookDeps),receiveTestWebhook(eventRequest('checkout.session.completed',stripe.session),webhookDeps),reconcileWithTestStripe(stripe.session.metadata.reservation_id,{store,secretKey:env.GUA_TEST_STRIPE_KEY,accountId:env.GUA_TEST_STRIPE_ACCOUNT_ID,fetchImpl:stripe.fetchImpl})]);
     assert.equal(outcomes[0].status,200);assert.equal(outcomes[1].status,200);assert.equal(outcomes[2].status,'paid');
     assert.deepEqual(store.db.prepare('SELECT sku,available,reserved,sold FROM stock ORDER BY sku').all().map(r=>({...r})),[{sku:'the-jade',available:79,reserved:0,sold:1},{sku:'the-steel',available:20,reserved:0,sold:1}]);
-    assert.equal(store.db.prepare('SELECT total FROM orders').get().total,2280);assert.equal(store.db.prepare('SELECT count(*) n FROM orders').get().n,1);assert.equal(store.db.prepare('SELECT count(*) n FROM outbox').get().n,1);assert.equal(store.db.prepare('SELECT status FROM outbox').get().status,'pending');
+    assert.equal(store.db.prepare('SELECT total FROM orders').get().total,1298);assert.equal(store.db.prepare('SELECT count(*) n FROM orders').get().n,1);assert.equal(store.db.prepare('SELECT count(*) n FROM outbox').get().n,1);assert.equal(store.db.prepare('SELECT status FROM outbox').get().status,'pending');
     const lateExpiry={...stripe.session,status:'expired',payment_status:'unpaid'};assert.equal((await receiveTestWebhook(eventRequest('checkout.session.expired',lateExpiry),webhookDeps)).status,200);assert.equal(store.db.prepare("SELECT available FROM stock WHERE sku='the-steel'").get().available,20);
   }finally{store.close();}
 });

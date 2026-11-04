@@ -34,7 +34,7 @@ test('timeout retry preserves reservation and idempotency; duplicate resumes sam
     if (_url.endsWith('/v1/account')) return Response.json({ id: 'acct_test' });
     if (options.method === 'GET') return Response.json({ id: 'cs_test_order', status: 'open', url: 'https://checkout.stripe.com/c/pay/cs_test_order' });
     keys.push(options.headers['Idempotency-Key']); calls++;
-    assert.equal(options.body.get('line_items[0][price_data][unit_amount]'), '1290');
+    assert.equal(options.body.get('line_items[0][price_data][unit_amount]'), '699');
     assert.equal(options.body.get('shipping_options[0][shipping_rate_data][fixed_amount][amount]'), '199');
     if (calls === 1) throw new Error('TIMEOUT');
     return Response.json({ id: 'cs_test_order', url: 'https://checkout.stripe.com/c/pay/cs_test_order' });
