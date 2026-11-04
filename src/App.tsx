@@ -17,6 +17,7 @@ import Versand from './pages/legal/Versand';
 import NotFound from './pages/NotFound';
 import Account from './pages/Account';
 import CheckoutResult from './pages/CheckoutResult';
+import WithdrawalOnline from './pages/legal/WithdrawalOnline';
 
 function App() {
   return (
@@ -41,6 +42,7 @@ function App() {
             <Route path="/legal/datenschutz" element={<Datenschutz />} />
             <Route path="/legal/agb" element={<AGB />} />
             <Route path="/legal/widerruf" element={<Widerruf />} />
+            <Route path="/widerruf/online" element={<WithdrawalOnline />} />
             <Route path="/legal/versand" element={<Versand />} />
             <Route path="*" element={<NotFound />} />
           </Routes>

@@ -14,6 +14,7 @@ async function initializeStore(client, databaseName) {
     db.collection('reservations').createIndex({ status: 1, createdAt: 1 }),
     db.collection('orders').createIndex({ reservationId: 1 }, { unique: true }),
     db.collection('mail_outbox').createIndex({ status: 1, nextAttemptAt: 1, createdAt: 1 }),
+    db.collection('withdrawals').createIndex({ orderReference: 1, createdAt: 1 }),
   ]);
   return mongoReservationStore(client, databaseName);
 }

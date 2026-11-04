@@ -8,6 +8,7 @@ export function mongoReservationStore(client, databaseName = 'gua_shop') {
   const orders = db.collection('orders');
   const mailOutbox = db.collection('mail_outbox');
   const paymentConflicts = db.collection('payment_conflicts');
+  const withdrawals = db.collection('withdrawals');
   const limiter = mongoCheckoutLimiter(db);
 
   async function transact(work) {
@@ -17,6 +18,18 @@ export function mongoReservationStore(client, databaseName = 'gua_shop') {
   }
 
   return {
+    async authorizeWithdrawal(reference, email) {
+      const job = await mailOutbox.findOne({ _id: reference }, { projection: { recipient: 1 } });
+      return typeof job?.recipient === 'string' && job.recipient.toLowerCase() === email.toLowerCase();
+    },
+    async recordWithdrawal(id, withdrawal) {
+      await withdrawals.insertOne({ _id: id, ...withdrawal, status: 'received', createdAt: new Date() });
+    },
+    async settleWithdrawal(id, status, details = {}) {
+      if (!['confirmed', 'confirmation_pending'].includes(status)) throw new Error('INVALID_WITHDRAWAL_STATE');
+      const result = await withdrawals.updateOne({ _id: id, status: 'received' }, { $set: { status, ...details, updatedAt: new Date() } });
+      return result.modifiedCount === 1;
+    },
     async consumeCheckoutRate(scope, identity, seconds) { return limiter.consume(scope, identity, seconds); },
     async getReservation(id) { return reservations.findOne({ _id: id }); },
     async available() {

@@ -1,4 +1,5 @@
 import '../StaticPage.css';
+import { Link } from 'react-router-dom';
 export default function Widerruf() {
   return (
     <div className="static-page"><div className="container">
@@ -15,6 +16,7 @@ export default function Widerruf() {
         </p>
 
         <h2>Ausübung des Widerrufsrechts</h2>
+        <p><Link className="btn btn--primary" to="/widerruf/online">Vertrag online widerrufen</Link></p>
         <p>
           Um Ihr Widerrufsrecht auszuüben, müssen Sie uns mittels einer eindeutigen Erklärung (z. B. per E-Mail oder
           Brief) über Ihren Entschluss, diesen Vertrag zu widerrufen, informieren.

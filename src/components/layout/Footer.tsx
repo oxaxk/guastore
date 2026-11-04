@@ -16,6 +16,7 @@ const legalLinks = [
   { path: '/legal/datenschutz', label: 'Datenschutz' },
   { path: '/legal/agb', label: 'AGB' },
   { path: '/legal/widerruf', label: 'Widerrufsrecht' },
+  { path: '/widerruf/online', label: 'Vertrag widerrufen' },
   { path: '/legal/versand', label: 'Versand' },
 ];
 
