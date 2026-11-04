@@ -21,8 +21,10 @@ export default function Widerruf() {
         </p>
         <p>
           Sie können Ihren Widerruf an folgende Kontaktadresse richten:<br />
-          GUA SHOP / Slicker<br />
-          E-Mail: info@gua.shop
+          Onur Arda Küçük, handelnd unter GUA SHOP<br />
+          Saalmannstraße 9<br />
+          13403 Berlin<br />
+          E-Mail: info@guasha-shop.de
         </p>
 
         <h2>Folgen des Widerrufs</h2>
@@ -55,12 +57,15 @@ export default function Widerruf() {
           Wenn Sie den Vertrag widerrufen wollen, können Sie folgende Erklärung verwenden:
         </p>
         <p>
+          An: Onur Arda Küçük, handelnd unter GUA SHOP, Saalmannstraße 9, 13403 Berlin, info@guasha-shop.de<br /><br />
           Hiermit widerrufe ich den von mir abgeschlossenen Vertrag über den Kauf der folgenden Waren: __________<br />
           Bestellt am / erhalten am: __________<br />
           Name der Verbraucherin / des Verbrauchers: __________<br />
           Anschrift: __________<br />
-          Datum: __________
+          Datum: __________<br />
+          Unterschrift (nur bei Mitteilung auf Papier): __________
         </p>
+        <p><a href="/widerrufsformular.txt" download>Muster-Widerrufsformular herunterladen</a></p>
       </div>
     </div></div>
   );

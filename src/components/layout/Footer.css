@@ -205,3 +205,14 @@
     grid-template-columns: 1fr;
   }
 }
+.footer__wordmark { font-family: var(--font-heading); font-size: 1.35rem; font-weight: 600; letter-spacing: .16em; }
+
+/* Flat white footer: dark text remains legible on the light surface. */
+.footer { background: #fff; color: #252321; border-top: 1px solid #dedbd7; }
+.footer__logo, .footer__links-title { color: #252321; }
+.footer__tagline, .footer__links-list a, .footer__copyright, .footer__payment { color: #514d49; }
+.footer__links-list a:hover, .footer__payment a:hover { color: #111; text-decoration: underline; }
+.footer__bottom { border-top-color: #dedbd7; }
+.footer__links-list a { display: inline-flex; align-items: center; min-height: 44px; font-size: 1rem; }
+.footer__links-list { gap: 0; }
+.footer__logo { max-width: none; }

@@ -1,19 +1,51 @@
 import './CartDrawer.css';
 import { useCart } from '@/context/CartContext';
 import { Link } from 'react-router-dom';
+import { formatPrice } from '@/lib/commerce';
+import { useEffect, useRef, useState } from 'react';
+import { MAX_CART_QUANTITY } from '@/lib/cart-policy';
 
 export default function CartDrawer() {
-  const { items, isOpen, closeCart, removeItem, updateQuantity, subtotal } = useCart();
-
-  const formatPrice = (price: number) => {
-    return new Intl.NumberFormat('de-DE', {
-      style: 'currency',
-      currency: 'EUR',
-    }).format(price);
-  };
-
-  const handleCheckout = () => {
-    window.location.href = '/shop';
+  const { items, isOpen, closeCart, removeItem, updateQuantity, subtotal, shipping, total, stoneCount } = useCart();
+  const drawerRef = useRef<HTMLElement>(null);
+  const [checkoutState, setCheckoutState] = useState<'idle' | 'loading' | 'error'>('idle');
+  useEffect(() => {
+    if (!isOpen) return;
+    const previous = document.activeElement as HTMLElement | null;
+    const drawer = drawerRef.current;
+    drawer?.querySelector<HTMLButtonElement>('button')?.focus();
+    const keydown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') { event.preventDefault(); closeCart(); }
+      if (event.key !== 'Tab' || !drawer) return;
+      const nodes = [...drawer.querySelectorAll<HTMLElement>('a[href],button:not(:disabled),input:not(:disabled),[tabindex="0"]')].filter(el => el.getClientRects().length);
+      const first = nodes[0], last = nodes[nodes.length - 1];
+      if (event.shiftKey && document.activeElement === first) { event.preventDefault(); last?.focus(); }
+      else if (!event.shiftKey && document.activeElement === last) { event.preventDefault(); first?.focus(); }
+    };
+    document.addEventListener('keydown', keydown);
+    return () => { document.removeEventListener('keydown', keydown); previous?.focus(); };
+  }, [isOpen, closeCart]);
+  const startCheckout = async () => {
+    if (checkoutState === 'loading') return;
+    setCheckoutState('loading');
+    const checkoutItems = items
+      .filter(item => item.handle === 'the-steel' || item.handle === 'the-jade')
+      .map(item => ({ sku: item.handle, quantity: item.quantity }));
+    try {
+      const request = () => fetch('/api/checkout', {
+        method: 'POST',
+        credentials: 'same-origin',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ items: checkoutItems }),
+      });
+      let response = await request();
+      if (response.status === 202) response = await request();
+      const body = await response.json().catch(() => null) as { url?: string } | null;
+      if (!response.ok || typeof body?.url !== 'string' || !body.url.startsWith('https://checkout.stripe.com/')) throw new Error('CHECKOUT_FAILED');
+      window.location.assign(body.url);
+    } catch {
+      setCheckoutState('error');
+    }
   };
 
   return (
@@ -27,6 +59,8 @@ export default function CartDrawer() {
 
       {/* Drawer */}
       <aside 
+        ref={drawerRef}
+        hidden={!isOpen}
         className={`cart-drawer ${isOpen ? 'cart-drawer--open' : ''}`}
         aria-label="Warenkorb"
         role="dialog"
@@ -86,14 +120,15 @@ export default function CartDrawer() {
                       <div className="cart-item__quantity">
                         <button 
                           onClick={() => updateQuantity(item.variantId, item.quantity - 1)}
-                          aria-label="Menge verringern"
+                          aria-label={`Menge von ${item.title} verringern, aktuell ${item.quantity}`}
                         >
                           −
                         </button>
-                        <span>{item.quantity}</span>
+                        <span aria-live="polite">{item.quantity}</span>
                         <button 
                           onClick={() => updateQuantity(item.variantId, item.quantity + 1)}
-                          aria-label="Menge erhöhen"
+                          disabled={item.quantity >= MAX_CART_QUANTITY}
+                          aria-label={`Menge von ${item.title} erhöhen, aktuell ${item.quantity}`}
                         >
                           +
                         </button>
@@ -101,7 +136,7 @@ export default function CartDrawer() {
                       <button 
                         className="cart-item__remove"
                         onClick={() => removeItem(item.variantId)}
-                        aria-label="Artikel entfernen"
+                        aria-label={`${item.title} aus dem Warenkorb entfernen`}
                       >
                         Entfernen
                       </button>
@@ -116,15 +151,22 @@ export default function CartDrawer() {
                 <span>Zwischensumme</span>
                 <span>{formatPrice(subtotal)}</span>
               </div>
+              <div className="cart-drawer__shipping">
+                <span>Versand (Deutschland)</span>
+                <span>{shipping === 0 ? 'Kostenlos' : formatPrice(shipping)}</span>
+              </div>
+              <div className="cart-drawer__total" aria-live="polite">
+                <span>Gesamtsumme</span>
+                <strong>{formatPrice(total)}</strong>
+              </div>
               <p className="cart-drawer__note">
-                Versandkosten und Steuern werden an der Kasse berechnet.
+                {stoneCount >= 2 ? 'Ab 2 Steinen ist dein Versand innerhalb Deutschlands kostenlos.' : 'Noch einen Stein hinzufügen und innerhalb Deutschlands Versandkosten sparen.'}
               </p>
-              <button 
-                className="btn btn--primary btn--full btn--lg"
-                onClick={handleCheckout}
-              >
-                Zur Kasse
+              <button className="btn btn--primary btn--full btn--lg" type="button" onClick={startCheckout} disabled={checkoutState === 'loading'}>
+                {checkoutState === 'loading' ? 'Sicherer Checkout wird geöffnet …' : 'Sicher mit Stripe bezahlen'}
               </button>
+              {checkoutState === 'error' && <p className="cart-drawer__error" role="alert">Checkout derzeit nicht erreichbar. Bitte versuche es gleich erneut.</p>}
+              <p className="cart-drawer__note">Du wirst zum sicheren Stripe-Testcheckout weitergeleitet. Die Bestellung wird erst nach bestätigter Zahlung verarbeitet.</p>
               <button 
                 className="btn btn--ghost btn--full"
                 onClick={closeCart}

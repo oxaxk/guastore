@@ -15,6 +15,8 @@ import AGB from './pages/legal/AGB';
 import Widerruf from './pages/legal/Widerruf';
 import Versand from './pages/legal/Versand';
 import NotFound from './pages/NotFound';
+import Account from './pages/Account';
+import CheckoutResult from './pages/CheckoutResult';
 
 function App() {
   return (
@@ -27,10 +29,14 @@ function App() {
             <Route path="/shop" element={<Shop />} />
             <Route path="/shop/category/:slug" element={<CategoryPage />} />
             <Route path="/shop/product/:handle" element={<ProductDetail />} />
+            <Route path="/shop/:handle" element={<ProductDetail />} />
             <Route path="/how-to" element={<HowTo />} />
             <Route path="/about" element={<About />} />
             <Route path="/blog" element={<Blog />} />
             <Route path="/contact" element={<Contact />} />
+            <Route path="/konto" element={<Account />} />
+            <Route path="/checkout/success" element={<CheckoutResult />} />
+            <Route path="/checkout/cancel" element={<CheckoutResult cancelled />} />
             <Route path="/legal/impressum" element={<Impressum />} />
             <Route path="/legal/datenschutz" element={<Datenschutz />} />
             <Route path="/legal/agb" element={<AGB />} />

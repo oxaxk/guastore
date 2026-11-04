@@ -7,8 +7,8 @@ export default function AGB() {
         <div className="legal-content">
         <h2>§ 1 Geltungsbereich</h2>
         <p>
-          Diese Allgemeinen Geschäftsbedingungen (AGB) gelten für alle Bestellungen, die Verbraucherinnen und Verbraucher
-          sowie Unternehmerinnen und Unternehmer über den Online-Shop von GUA SHOP abgeben.
+          Diese Allgemeinen Geschäftsbedingungen (AGB) gelten für Bestellungen und Verträge über Produkte von GUA SHOP mit
+          Verbraucherinnen und Verbrauchern sowie Unternehmerinnen und Unternehmern.
         </p>
 
         <h2>§ 2 Vertragspartner</h2>
@@ -18,24 +18,25 @@ export default function AGB() {
 
         <h2>§ 3 Vertragsschluss</h2>
         <p>
-          Die Darstellung der Produkte im Online-Shop stellt kein rechtlich bindendes Angebot, sondern eine unverbindliche
-          Produktpräsentation dar. Mit Abschluss des Bestellvorgangs geben Sie ein verbindliches Angebot zum Kauf der im
-          Warenkorb enthaltenen Waren ab. Der Vertrag kommt erst durch unsere ausdrückliche Annahme oder durch Versand der
-          Ware zustande.
+          Die Darstellung der Produkte ist kein rechtlich bindendes Angebot, sondern eine unverbindliche
+          Produktpräsentation. Mit dem Absenden der zahlungspflichtigen Bestellung im Stripe-Checkout geben Sie ein
+          verbindliches Angebot zum Kauf der im Checkout aufgeführten Waren ab. Der Vertrag kommt zustande, wenn wir die
+          Bestellung durch eine Bestellbestätigung per E-Mail annehmen oder die Ware versenden.
         </p>
 
         <h2>§ 4 Preise und Zahlung</h2>
         <p>
-          Alle im Shop angegebenen Preise sind Endpreise und verstehen sich inklusive der jeweils geltenden gesetzlichen
-          Umsatzsteuer, sofern diese anfällt. Zusätzlich anfallende Versandkosten werden im Bestellprozess gesondert
-          ausgewiesen. Die Zahlung erfolgt über die im Checkout angebotenen Zahlungsarten.
+          Alle im Shop angegebenen Preise sind Endpreise. Versandkosten innerhalb Deutschlands werden im Warenkorb und
+          unmittelbar vor Abgabe der Bestellung ausgewiesen. Die Zahlung erfolgt über die im Stripe-Checkout angebotenen
+          Zahlungsarten. Die Belastung richtet sich nach der dort ausgewählten Zahlungsart.
         </p>
 
         <h2>§ 5 Lieferung und Versand</h2>
         <p>
-          Die Lieferung erfolgt an die von Ihnen angegebene Lieferadresse. Lieferzeiten und Versandkosten werden im Shop
-          sowie im Checkout transparent dargestellt. Sollte ein Produkt vorübergehend nicht verfügbar sein, werden wir Sie
-          hierüber unverzüglich informieren.
+          Der Versand erfolgt derzeit nur innerhalb Deutschlands an die im Checkout angegebene Lieferadresse. Die
+          Lieferzeit beträgt in der Regel 2–4 Werktage. Die Versandkosten stehen auf der Seite „Versand“ und werden vor
+          Abgabe der Bestellung angezeigt. Sollte ein Produkt ausnahmsweise nicht verfügbar sein, informieren wir Sie
+          unverzüglich per E-Mail und erstatten bereits erhaltene Zahlungen.
         </p>
 
         <h2>§ 6 Eigentumsvorbehalt</h2>

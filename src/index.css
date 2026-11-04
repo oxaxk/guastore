@@ -1,4 +1,7 @@
 /* MYGUASHA Design System - Vanilla CSS */
+:root, :root[data-stone='steel'] { --stone-tint: #eff1f2; --stone-accent: #909ba1; }
+:root[data-stone='jade'] { --stone-tint: #e8f1e9; --stone-accent: #71927a; }
+:root[data-stone='rose'] { --stone-tint: #f7ecec; --stone-accent: #ba9295; }
 
 /* ===== CSS RESET ===== */
 *, *::before, *::after {
@@ -499,3 +502,16 @@ p {
   background-color: var(--color-sage-light);
   color: var(--color-text-primary);
 }
+/* Picasso visual layer: warm paper, charcoal actions, consistent product framing. */
+:root{--color-background:#faf8f5;--color-surface:#fff;--color-sage:#383633;--color-sage-dark:#242320;--color-sage-light:#f4f0e9;--color-beige:#eee7dd;--color-beige-light:#f8f5f0;--color-text-primary:#252321;--color-text-secondary:#55504b;--color-text-muted:#68615b;--color-border:#ddd7cf;--radius-lg:16px;--radius-xl:22px}
+html{scroll-padding-top:90px}body{background:#faf8f5;color:#252321} :focus-visible{outline:3px solid #946346;outline-offset:3px}
+.btn--primary,.chip--active{background:#302d29!important;color:#fff!important;border-color:#302d29!important}.btn--primary:hover,.chip--active:hover{background:#51483f!important}.chip:hover{border-color:#51483f;color:#252321;background:#eee7dd}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto!important}*,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important}}
+
+/* Shared white foundation for catalogue, information and product pages. */
+:root { --color-background: #fff; --color-surface: #fff; --color-beige-light: #f8f8f7; --color-sage-light: #f5f6f5; --color-border: #dedfdd; }
+body, .shop-page, .static-page, .how-to-page, .product-detail { background-color: #fff !important; }
+.header { background: rgba(255,255,255,.97); border-bottom: 1px solid var(--stone-tint); transition: border-color 600ms ease, background-color 600ms ease; }
+.shop-page__header h1, .static-page h1 { line-height: 1.1; }
+.product-card__description, .legal-content p, .content-block p, .product-detail__description, .tab-content { font-size: 1rem; line-height: 1.65; }
+@media (max-width: 767px) { .shop-page__header p, .static-page .lead, .product-card__description, .tab-content { font-size: 1rem; line-height: 1.65; } }

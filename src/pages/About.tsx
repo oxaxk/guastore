@@ -14,7 +14,7 @@ export default function About() {
             das sich wirklich gut anfühlt.
           </p>
           <p>
-            Unser Fokus liegt auf wenigen, starken Produkten mit echtem Charakter – aktuell mit The Steel und The Jade,
+            Unser Fokus liegt auf wenigen, starken Produkten mit echtem Charakter – aktuell mit The Steel und Xiu Jade,
             ergänzt durch The Rose als kommende Preview.
           </p>
         </div>
@@ -22,7 +22,7 @@ export default function About() {
           <h2>Wofür wir stehen</h2>
           <ul>
             <li><strong>Kuratierung statt Überladung:</strong> Weniger Produkte, klarere Entscheidungen, stärkerer Fokus.</li>
-            <li><strong>Material mit Bedeutung:</strong> Edelstahl, Jade und ausgewählte Materialien mit bewusstem Hautgefühl.</li>
+            <li><strong>Material mit Bedeutung:</strong> Edelstahl, Xiu Jade und ausgewählte Materialien mit bewusstem Hautgefühl.</li>
             <li><strong>Modernes Ritual:</strong> Selfcare ohne Kitsch – reduziert, clean und alltagstauglich.</li>
             <li><strong>Premium-Ästhetik:</strong> Editorial statt überladen, ruhig statt laut, hochwertig statt beliebig.</li>
           </ul>

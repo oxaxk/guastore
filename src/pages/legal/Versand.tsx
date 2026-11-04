@@ -1,4 +1,5 @@
 import '../StaticPage.css';
+import { formatPrice, SHIPPING_DE_CENTS, FREE_SHIPPING_STONE_COUNT } from '@/lib/commerce';
 export default function Versand() {
   return (
     <div className="static-page"><div className="container">
@@ -6,27 +7,21 @@ export default function Versand() {
       <div className="legal-content">
         <h2>Versandkosten</h2>
         <p>
-          Innerhalb Deutschlands berechnen wir eine Versandpauschale von 4,90 €. Ab einem Bestellwert von 50,00 €
-          liefern wir innerhalb Deutschlands versandkostenfrei.
-        </p>
-        <p>
-          Für Lieferungen in ausgewählte EU-Länder berechnen wir derzeit pauschal 9,90 € Versandkosten. Die finalen
-          Versandkosten werden Ihnen im Checkout vor Abschluss der Bestellung transparent angezeigt.
+          Innerhalb Deutschlands berechnen wir für einen Stein {formatPrice(SHIPPING_DE_CENTS / 100)} Versandkosten.
+          Ab {FREE_SHIPPING_STONE_COUNT} Steinen pro Bestellung liefern wir innerhalb Deutschlands versandkostenfrei.
+          Edelstahl und Xiu Jade können dabei kombiniert werden. Entscheidend ist die Stückzahl, nicht der Bestellwert.
         </p>
 
         <h2>Lieferzeiten</h2>
         <p>
-          Die reguläre Lieferzeit innerhalb Deutschlands beträgt in der Regel 2 bis 4 Werktage nach Zahlungseingang.
-        </p>
-        <p>
-          Für Lieferungen in EU-Länder beträgt die reguläre Lieferzeit in der Regel 5 bis 10 Werktage. In Einzelfällen
-          kann es – insbesondere bei hoher Auslastung oder internationaler Zustellung – zu längeren Lieferzeiten kommen.
+          Die Lieferzeit innerhalb Deutschlands beträgt in der Regel 2–4 Werktage. Sie beginnt nach erfolgreicher
+          Zahlung. An Sonn- und Feiertagen erfolgt keine Zustellung.
         </p>
 
         <h2>Versandpartner</h2>
         <p>
-          Der Versand erfolgt in der Regel über etablierte Versanddienstleister wie DHL oder vergleichbare Logistikpartner.
-          Der konkret eingesetzte Versandpartner kann je nach Lieferland, Verfügbarkeit und Versandart variieren.
+          Der Versand erfolgt innerhalb Deutschlands mit einem geeigneten Versanddienstleister. Den konkret eingesetzten
+          Versandpartner teilen wir mit der Versandbestätigung mit.
         </p>
 
         <h2>Hinweise zur Verfügbarkeit</h2>

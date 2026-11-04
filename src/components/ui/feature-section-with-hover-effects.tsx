@@ -1,5 +1,5 @@
 import React from "react";
-import { cn } from "@/lib/shopify/utils";
+import { cn } from "@/lib/utils";
 import {
   IconAdjustmentsBolt,
   IconHeart,
@@ -25,7 +25,7 @@ export function FeaturesSectionWithHoverEffects({
   const defaultFeatures: FeatureItem[] = [
     {
       title: "Premium Materialien",
-      description: "Kuratierte Gua Sha Tools aus Edelstahl, Jade und ausgewählten Materialien für ein hochwertiges Ritual mit spürbarer Qualität.",
+      description: "Kuratierte Gua Sha Tools aus Edelstahl, Xiu Jade und ausgewählten Materialien für ein hochwertiges Ritual mit spürbarer Qualität.",
       icon: <IconTool />,
     },
     {
@@ -44,7 +44,7 @@ export function FeaturesSectionWithHoverEffects({
       icon: <IconStars />,
     },
     {
-      title: "The Steel & The Jade",
+      title: "The Steel & Xiu Jade",
       description: "Unser V1-Fokus: zwei kuratierte Hero-Produkte, klar inszeniert und bewusst statt beliebig erweitert.",
       icon: <IconAdjustmentsBolt />,
     },

@@ -1,0 +1,20 @@
+.steel-viewer { position: relative; width: 100%; height: 100%; min-height: 26rem; }
+.steel-viewer__canvas { position: absolute; inset: 0; outline-offset: -4px; }
+.steel-viewer__canvas canvas { width: 100%; height: 100%; cursor: grab; touch-action: pan-y; }
+.steel-viewer__canvas canvas:active { cursor: grabbing; }
+.steel-viewer__canvas:focus-visible { outline: 2px solid #334554; }
+.steel-viewer__fallback { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; }
+.steel-viewer__controls { position: absolute; bottom: 1.25rem; left: 1rem; right: 1rem; display: flex; align-items: center; justify-content: space-between; gap: 0.6rem; }
+.steel-viewer__controls > span { font-size: 0.75rem; color: #4b5862; }
+.steel-viewer__controls > div { display: flex; gap: 0.25rem; background: #f8fafbee; border: 1px solid #cbd2d7; padding: 0.2rem; border-radius: 2rem; }
+.steel-viewer__controls button { min-height: 44px; padding: 0.4rem 0.85rem; border-radius: 2rem; font-size: 0.8rem; color: #37444e; }
+.steel-viewer__controls button[aria-pressed="true"] { background: #26343e; color: white; }
+.steel-viewer__notice { position: absolute; bottom: 0.75rem; left: 1rem; right: 1rem; font-size: 0.8rem; color: #394650; background: #ffffffeb; padding: 0.6rem; }
+.steel-viewer--compact { min-height: 0; }
+.steel-viewer--compact canvas { cursor: default; }
+@media (max-width: 560px) {
+  .steel-viewer { min-height: 23rem; }
+  .steel-viewer--compact { min-height: 0; }
+  .steel-viewer__controls { flex-direction: column; bottom: 0.8rem; gap: 0.4rem; }
+  .steel-viewer__controls button { padding-inline: 1rem; }
+}

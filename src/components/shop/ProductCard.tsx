@@ -2,6 +2,7 @@ import './ProductCard.css';
 import { Link } from 'react-router-dom';
 import { useCart } from '@/context/CartContext';
 import type { Product } from '@/types/shopify';
+import { cataloguePrice, formatPrice, isCatalogueStone } from '@/lib/commerce';
 
 interface ProductCardProps {
   product: Product;
@@ -10,19 +11,12 @@ interface ProductCardProps {
 export default function ProductCard({ product }: ProductCardProps) {
   const { addItem } = useCart();
 
-  const formatPrice = (price: number) => {
-    return new Intl.NumberFormat('de-DE', {
-      style: 'currency',
-      currency: 'EUR',
-    }).format(price);
-  };
-
-  const isOnSale = product.compareAtPrice && product.compareAtPrice > product.price;
+  const price = cataloguePrice(product.handle, product.price);
+  const isOnSale = !isCatalogueStone(product.handle) && product.compareAtPrice && product.compareAtPrice > price;
   const discount = isOnSale 
     ? Math.round((1 - product.price / product.compareAtPrice!) * 100)
     : 0;
 
-  const isBestseller = product.tags?.includes('bestseller');
   const isNew = product.tags?.includes('new');
   const isDigital = product.tags?.includes('ebook');
 
@@ -42,8 +36,8 @@ export default function ProductCard({ product }: ProductCardProps) {
       variantId: variant.id,
       title: product.title,
       variantTitle: variant.title,
-      price: variant.price,
-      compareAtPrice: variant.compareAtPrice,
+      price,
+      compareAtPrice: isOnSale ? product.compareAtPrice : undefined,
       image: product.image,
       handle: product.handle,
     });
@@ -64,12 +58,7 @@ export default function ProductCard({ product }: ProductCardProps) {
               -{discount}%
             </span>
           )}
-          {!isOnSale && isBestseller && (
-            <span className="badge badge--bestseller product-card__badge">
-              Bestseller
-            </span>
-          )}
-          {!isOnSale && !isBestseller && isNew && (
+          {!isOnSale && isNew && (
             <span className="badge badge--new product-card__badge">
               Neu
             </span>
@@ -88,7 +77,7 @@ export default function ProductCard({ product }: ProductCardProps) {
           </p>
           <div className="product-card__price">
             <span className="product-card__price-current">
-              {formatPrice(product.price)}
+              {formatPrice(price)}
             </span>
             {isOnSale && (
               <span className="product-card__price-compare">

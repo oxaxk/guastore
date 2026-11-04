@@ -4,13 +4,11 @@ import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useCart } from '@/context/CartContext';
 
 const navLinks = [
-  { path: '/', label: 'Home' },
+  { path: '/', label: 'Startseite' },
   { path: '/shop', label: 'Shop' },
-  { path: '/compare', label: 'Compare' },
-  { path: '/how-to', label: 'How To' },
-  { path: '/faq', label: 'FAQ' },
-  { path: '/club', label: 'Club' },
-  { path: '/about', label: 'About' },
+  { path: '/how-to', label: 'Anwendung' },
+  { path: '/about', label: 'Über uns' },
+  { path: '/konto', label: 'Kundenkonto' },
 ];
 
 export default function Header() {
@@ -34,6 +32,15 @@ export default function Header() {
   }, [location]);
 
   useEffect(() => {
+    if (!isMobileMenuOpen) return;
+    const onEscape = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') setIsMobileMenuOpen(false);
+    };
+    window.addEventListener('keydown', onEscape);
+    return () => window.removeEventListener('keydown', onEscape);
+  }, [isMobileMenuOpen]);
+
+  useEffect(() => {
     if (isMobileMenuOpen) {
       document.body.style.overflow = 'hidden';
     } else {
@@ -49,12 +56,7 @@ export default function Header() {
       <div className="header__container">
         <div className="header__center">
           <Link to="/" className="header__logo">
-            <img
-              src="/img/guablack.png"
-              alt="GUA SHOP Logo"
-              className="header__logo-main header__logo-image"
-            />
-            <span className="header__logo-subtitle">Premium Gua Sha Tools</span>
+            <span className="header__logo-main">GUA SHA</span>
           </Link>
         </div>
 
@@ -77,11 +79,8 @@ export default function Header() {
           <button
             type="button"
             className="header__search-btn"
-            aria-label="Produkte suchen"
-            onClick={() => {
-              navigate('/shop?search=1');
-              window.dispatchEvent(new CustomEvent('shop:openSearch'));
-            }}
+            aria-label="Produkte ansehen"
+            onClick={() => navigate('/shop#products')}
           >
             <svg className="header__icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
               <path d="M11 19a8 8 0 1 1 0-16 8 8 0 0 1 0 16Z" stroke="currentColor" strokeWidth="2"/>
@@ -92,7 +91,7 @@ export default function Header() {
           <button
             className="header__menu-btn"
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-            aria-label="Menü öffnen"
+            aria-label={isMobileMenuOpen ? 'Menü schließen' : 'Menü öffnen'}
             aria-expanded={isMobileMenuOpen}
           >
             <span className={`header__menu-icon ${isMobileMenuOpen ? 'header__menu-icon--open' : ''}`} />
@@ -101,8 +100,8 @@ export default function Header() {
       </div>
 
       {/* Mobile Menu Overlay */}
-      <div className={`header__mobile-overlay ${isMobileMenuOpen ? 'header__mobile-overlay--open' : ''}`}>
-        <nav className="header__mobile-nav">
+      <div className={`header__mobile-overlay ${isMobileMenuOpen ? 'header__mobile-overlay--open' : ''}`} hidden={!isMobileMenuOpen}>
+        <nav className="header__mobile-nav" aria-label="Hauptnavigation">
           {navLinks.map((link, index) => (
             <Link
               key={link.path}

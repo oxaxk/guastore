@@ -2,7 +2,9 @@ import './Home.css';
 import { memo, useCallback, useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import ProductCard from '@/components/shop/ProductCard';
+import RitualCarousel from '@/components/shop/RitualCarousel';
 import { mockProducts, mockCollections } from '@/data/mockData';
+import { cataloguePrice, formatPrice, JADE_PRICE_CENTS, STEEL_PRICE_CENTS, SHIPPING_DE_COPY } from '@/lib/commerce';
 
 const benefits = [
   {
@@ -15,7 +17,7 @@ const benefits = [
     icon: '02',
     title: 'Gewicht für kontrollierte Züge',
     description:
-      'Edelstahl bringt mehr Gewicht, Jade und Rosenquarz sind etwas leichter – für ruhige, kontrollierte Bewegungen.',
+      'Edelstahl bringt mehr Gewicht, Xiu Jade und Rosenquarz sind etwas leichter – für ruhige, kontrollierte Bewegungen.',
   },
   {
     icon: '03',
@@ -58,26 +60,8 @@ const ritualSteps = [
   },
 ];
 
-const heroImages = ['/img/guasteal.png', '/img/guagreen.png', '/img/guarosa.png'];
-const reviews = [
-  {
-    name: 'Mara',
-    text: 'Der Edelstahl-Gua-Sha liegt stabil in der Hand und bleibt lange kühl. Nutze ihn jeden Morgen gegen Schwellung.',
-    rating: 5,
-  },
-  {
-    name: 'Elif',
-    text: 'Mit dem Jade-Tool bin ich gut reingekommen. Die Abläufe sind klar erklärt und realistisch im Alltag einplanbar.',
-    rating: 5,
-  },
-  {
-    name: 'Laura',
-    text:
-      'Ein paar Minuten am Abend mit dem Rosenquarz-Gua-Sha lösen merkbar Spannung im Kiefer. Genau dafür wollte ich das Tool.',
-    rating: 5,
-  },
-];
-
+const heroImages = ['/img/steel/the-steel-matched-v3.png', '/img/guagreen.png', '/img/guarosa.png'];
+const HeroProductVisual = ({ index }: { index: number }) => <img className="hero__image-img" src={heroImages[index]} alt={index === 0 ? 'Edelstahl Gua Sha' : index === 1 ? 'Xiu Jade Gua Sha' : 'Rosenquarz Gua Sha'} decoding="async" draggable={false} />;
 interface GlowingEffectProps {
   inactiveZone?: number;
   proximity?: number;
@@ -203,13 +187,58 @@ const GlowingEffect = memo(
 GlowingEffect.displayName = 'GlowingEffect';
 
 export default function Home() {
+  const heroStageRef = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+    let frame: number | null = null;
+
+    const updateHeroObject = () => {
+      frame = null;
+      const stage = heroStageRef.current;
+      if (!stage) return;
+
+      if (reducedMotion.matches) {
+        stage.style.setProperty('--hero-scroll-y', '0px');
+        stage.style.setProperty('--hero-scroll-rotate', '0deg');
+        return;
+      }
+
+      const rect = stage.getBoundingClientRect();
+      const viewport = window.innerHeight || 1;
+      const progress = Math.max(-1, Math.min(1, (viewport * 0.52 - rect.top) / viewport));
+      const mobile = window.matchMedia('(max-width: 768px)').matches;
+      const distance = mobile ? 18 : 44;
+      const rotation = mobile ? 1.2 : 2.8;
+
+      stage.style.setProperty('--hero-scroll-y', `${Math.round(progress * distance)}px`);
+      stage.style.setProperty('--hero-scroll-rotate', `${(progress * rotation).toFixed(2)}deg`);
+    };
+
+    const schedule = () => {
+      if (frame == null) frame = window.requestAnimationFrame(updateHeroObject);
+    };
+
+    schedule();
+    window.addEventListener('scroll', schedule, { passive: true });
+    window.addEventListener('resize', schedule);
+    reducedMotion.addEventListener('change', schedule);
+
+    return () => {
+      if (frame != null) window.cancelAnimationFrame(frame);
+      window.removeEventListener('scroll', schedule);
+      window.removeEventListener('resize', schedule);
+      reducedMotion.removeEventListener('change', schedule);
+    };
+  }, []);
+
   const featuredProducts = mockProducts
     .filter((p: any) => {
       const title = String(p?.title ?? '').toLowerCase();
       const handle = String(p?.handle ?? '').toLowerCase();
       const id = String(p?.id ?? '').toLowerCase();
       const hay = `${title} ${handle} ${id}`;
-      return !(hay.includes('ebook') || hay.includes('e-book') || hay.includes('e_book'));
+      return !(hay.includes('ebook') || hay.includes('e-book') || hay.includes('e_book') || handle === 'the-rose');
     })
     .slice(0, 3);
 
@@ -220,7 +249,7 @@ export default function Home() {
 
     const hay = `${title} ${handle} ${id}`;
 
-    if (hay.includes('edelstahl') || hay.includes('steel') || hay.includes('stainless')) return '/img/guasteal.png';
+    if (hay.includes('edelstahl') || hay.includes('steel') || hay.includes('stainless')) return '/img/steel/the-steel-matched-v3.png';
     if (hay.includes('jade') || hay.includes('green')) return '/img/guagreen.png';
     if (hay.includes('rosen') || hay.includes('quarz') || hay.includes('rose') || hay.includes('rosa')) return '/img/guarosa.png';
 
@@ -235,17 +264,10 @@ export default function Home() {
     const id = String(product?.id ?? '').toLowerCase();
     const hay = `${title} ${handle} ${id}`;
 
-    // cheap homepage pricing (display + card)
-    let cheapPrice: any = product?.price;
-    if (hay.includes('edelstahl') || hay.includes('steel') || hay.includes('stainless')) cheapPrice = 11.95;
-    if (hay.includes('jade') || hay.includes('green')) cheapPrice = 9.95;
-    if (hay.includes('rosen') || hay.includes('quarz') || hay.includes('rose') || hay.includes('rosa')) cheapPrice = 11.95;
+    let cheapPrice: number = cataloguePrice(product.handle, product.price);
 
     // strike-through "was" price
     let compareAt: any = undefined;
-    if (hay.includes('edelstahl') || hay.includes('steel') || hay.includes('stainless')) compareAt = 15.9;
-    if (hay.includes('jade') || hay.includes('green')) compareAt = 12.9;
-    if (hay.includes('rosen') || hay.includes('quarz') || hay.includes('rose') || hay.includes('rosa')) compareAt = 15.95;
 
     // Sold out override for rosenquarz
     const isRosenSoldOut =
@@ -289,20 +311,20 @@ export default function Home() {
     {
       key: 'edelstahl',
       label: 'Edelstahl Gua Sha',
-      href: '/shop#edelstahl-gua-sha',
-      priceDisplay: '11,95 €',
+      href: '/shop/product/the-steel',
+      priceDisplay: formatPrice(STEEL_PRICE_CENTS / 100),
     },
     {
       key: 'jade',
-      label: 'Jade Gua Sha',
-      href: '/shop#jade-gua-sha',
-      priceDisplay: '9,95 €',
+      label: 'Xiu Jade Gua Sha',
+      href: '/shop/product/the-jade',
+      priceDisplay: formatPrice(JADE_PRICE_CENTS / 100),
     },
     {
       key: 'rosenquarz',
       label: 'Rosenquarz Gua Sha',
-      href: '/shop#rosenquarz-gua-sha',
-      priceDisplay: '11,95 €',
+      href: '/shop/product/the-rose',
+      priceDisplay: 'Ausverkauft',
       soldOut: true,
     },
   ];
@@ -315,6 +337,19 @@ export default function Home() {
     return meta.priceDisplay;
   };
   const [activeHeroSlide, setActiveHeroSlide] = useState(0);
+  useEffect(() => {
+    document.documentElement.dataset.stone = ['steel', 'jade', 'rose'][activeHeroSlide];
+  }, [activeHeroSlide]);
+
+  useEffect(() => {
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    const sections = document.querySelectorAll<HTMLElement>('.home > section:not(.hero)');
+    const observer = new IntersectionObserver(entries => entries.forEach(entry => {
+      if (entry.isIntersecting) { entry.target.classList.add('section--visible'); observer.unobserve(entry.target); }
+    }), { threshold: 0.08 });
+    sections.forEach(section => { section.classList.add('section--reveal'); observer.observe(section); });
+    return () => { observer.disconnect(); sections.forEach(section => section.classList.remove('section--reveal', 'section--visible')); };
+  }, []);
   const [heroTargetSlide, setHeroTargetSlide] = useState<number | null>(null);
   // Add ref to mirror activeHeroSlide and keep in sync
   const activeHeroSlideRef = useRef(0);
@@ -329,7 +364,6 @@ export default function Home() {
   const [heroAnimPhase, setHeroAnimPhase] = useState<'idle' | 'prep' | 'run'>('idle');
   const heroAnimRafRef = useRef<number | null>(null);
   const heroWheelLockRef = useRef(0);
-  const heroAutoTimerRef = useRef<number | null>(null);
   const handleHeroWheel = (e: React.WheelEvent) => {
     // Trackpads send horizontal swipe as deltaX.
     const dx = e.deltaX;
@@ -352,19 +386,19 @@ export default function Home() {
     }
   };
 
-  const goToHeroSlide = (direction: 'next' | 'prev') => {
+  const goToHeroSlide = (direction: 'next' | 'prev', selectedIndex?: number) => {
     if (heroIsAnimatingRef.current) return;
 
     const currentIndex = activeHeroSlideRef.current;
     const lastIndex = heroImages.length - 1;
-    const nextIndex =
-      direction === 'next'
+    const nextIndex = selectedIndex ?? (direction === 'next'
         ? currentIndex === lastIndex
           ? 0
           : currentIndex + 1
         : currentIndex === 0
           ? lastIndex
-          : currentIndex - 1;
+          : currentIndex - 1);
+    if (nextIndex === currentIndex) return;
 
     setHeroPrevSlide(currentIndex);
     setHeroTargetSlide(nextIndex);
@@ -429,32 +463,11 @@ export default function Home() {
     };
   }, []);
 
-  useEffect(() => {
-    if (heroAutoTimerRef.current != null) {
-      window.clearInterval(heroAutoTimerRef.current);
-      heroAutoTimerRef.current = null;
-    }
-
-    heroAutoTimerRef.current = window.setInterval(() => {
-      if (heroIsAnimatingRef.current) return;
-      goToHeroSlide('next');
-    }, 4000);
-
-    return () => {
-      if (heroAutoTimerRef.current != null) {
-        window.clearInterval(heroAutoTimerRef.current);
-        heroAutoTimerRef.current = null;
-      }
-    };
-  }, []);
-
   const categories = mockCollections.slice(0, 3);
   const [activeProductSlide, setActiveProductSlide] = useState(0);
   const productsCarouselRef = useRef<HTMLDivElement | null>(null);
   const [activeCategorySlide, setActiveCategorySlide] = useState(0);
-  const [activeReviewSlide, setActiveReviewSlide] = useState(0);
   const categoriesCarouselRef = useRef<HTMLDivElement | null>(null);
-  const reviewsCarouselRef = useRef<HTMLDivElement | null>(null);
 
   const [activeBenefitSlide, setActiveBenefitSlide] = useState(0);
   const benefitsCarouselRef = useRef<HTMLDivElement | null>(null);
@@ -546,31 +559,6 @@ export default function Home() {
     }
   };
 
-  const scrollToReviewSlide = (targetIndex: number) => {
-    const container = reviewsCarouselRef.current;
-    if (!container) return;
-    const maxIndex = reviews.length - 1;
-    const clampedIndex = Math.min(Math.max(targetIndex, 0), maxIndex);
-    const width = container.clientWidth;
-    if (!width) return;
-    container.scrollTo({
-      left: width * clampedIndex,
-      behavior: 'smooth',
-    });
-    setActiveReviewSlide(clampedIndex);
-  };
-
-  const handleReviewsCarouselScroll = () => {
-    const container = reviewsCarouselRef.current;
-    if (!container) return;
-    const width = container.clientWidth;
-    if (!width) return;
-    const index = Math.round(container.scrollLeft / width);
-    if (index !== activeReviewSlide) {
-      setActiveReviewSlide(index);
-    }
-  };
-
   return (
     <div className="home">
       {/* Hero Section */}
@@ -580,7 +568,7 @@ export default function Home() {
             {/* <span className="hero__eyebrow">Definiere · Jede · Kurve</span> */}
             <h1 className="hero__title">Definiere. Jede. Kurve.</h1>
             <p className="hero__subtitle">
-              Blitzschnelle Lieferung in Deutschland. Gua Sha Steine für deine tägliche Gesichtsmassage – für Kiefer, Wangen und Hals.
+              Drei Materialien, ein ruhiges Ritual. Entdecke Gua Sha für Gesicht und Hals.
             </p>
             <div className="hero__actions">
               <Link to="/shop" className="btn btn--primary btn--lg btn--shimmer" aria-label="Zum Shop">
@@ -591,15 +579,9 @@ export default function Home() {
               </Link>
             </div>
             <div className="hero__trust">
-              <Link to="/shop#edelstahl-gua-sha" className="hero__trust-badge hero__trust-badge--link">
-                Edelstahl Gua Sha
-              </Link>
-              <Link to="/shop#jade-gua-sha" className="hero__trust-badge hero__trust-badge--link">
-                Jade Gua Sha
-              </Link>
-              <Link to="/shop#rosenquarz-gua-sha" className="hero__trust-badge hero__trust-badge--link">
-                Rosenquarz Gua Sha
-              </Link>
+              {['Edelstahl', 'Xiu Jade', 'Rosenquarz'].map((label, index) => (
+                <button key={label} type="button" className="hero__trust-badge hero__trust-badge--link" aria-pressed={activeHeroSlide === index} onClick={() => goToHeroSlide(index > activeHeroSlide ? 'next' : 'prev', index)}>{label}</button>
+              ))}
             </div>
           </div>
           <div className="hero__image">
@@ -632,6 +614,7 @@ export default function Home() {
               </button>
               <div
                 className="hero__image-stage"
+                ref={heroStageRef}
                 aria-hidden="true"
                 onTouchStart={handleHeroTouchStart}
                 onTouchEnd={handleHeroTouchEnd}
@@ -667,13 +650,7 @@ export default function Home() {
                           pointerEvents: 'none',
                         }}
                       >
-                        <img
-                          className="hero__image-img"
-                          src={heroImages[heroPrevSlide]}
-                          alt=""
-                          decoding="async"
-                          draggable={false}
-                        />
+                        <HeroProductVisual index={heroPrevSlide} />
                       </div>
 
                       <div
@@ -690,13 +667,7 @@ export default function Home() {
                           pointerEvents: 'none',
                         }}
                       >
-                        <img
-                          className="hero__image-img"
-                          src={heroImages[heroTargetSlide ?? activeHeroSlide]}
-                          alt=""
-                          decoding="async"
-                          draggable={false}
-                        />
+                        <HeroProductVisual index={heroTargetSlide ?? activeHeroSlide} />
                       </div>
                     </>
                   );
@@ -705,13 +676,7 @@ export default function Home() {
                     className="hero__image-slide hero__image-slide--active"
                     style={{ position: 'absolute', inset: 0, transform: 'translateX(0%)', opacity: 1, filter: 'blur(0px)', transition: 'none', willChange: 'auto' }}
                   >
-                    <img
-                      className="hero__image-img"
-                      src={heroImages[activeHeroSlide]}
-                      alt="Gua Sha Stein"
-                      decoding="async"
-                      draggable={false}
-                    />
+                    <HeroProductVisual index={activeHeroSlide} />
                   </div>
                 )}
               </div>
@@ -770,11 +735,12 @@ export default function Home() {
                         color: isHeroSoldOut ? '#4b5563' : undefined,
                       }}
                     >
-                      {isHeroSoldOut ? 'Ausverkauft' : `${pickHeroPrice(activeHeroSlide)} inkl. Versand`}
+                      {isHeroSoldOut ? 'Ausverkauft' : pickHeroPrice(activeHeroSlide)}
                     </span>
                   </Link>
                 );
               })()}
+              {!heroProductMeta[activeHeroSlide]?.soldOut && <p className="hero__shipping">{SHIPPING_DE_COPY}</p>}
             </div>
           </div>
         </div>
@@ -786,7 +752,7 @@ export default function Home() {
           <div className="section-header">
             <h2 className="section-title">Kleine Auswahl. Klare Entscheidung.</h2>
             <p className="section-subtitle">
-              Drei Tools. Alles, was du brauchst – ohne Variantenchaos.
+              Zwei verfügbare Tools mit klarer Materialwahl.
             </p>
           </div>
 
@@ -854,7 +820,7 @@ export default function Home() {
           <div className="section-header">
             <h2 className="section-title">Was du erwarten kannst</h2>
             <p className="section-subtitle">
-              Was unsere Tools realistisch leisten – ohne Filter, ohne Übertreibung.
+              Material, Form und Pflege auf einen Blick.
             </p>
           </div>
           <div className="home-products__carousel benefits__carousel">
@@ -936,32 +902,12 @@ export default function Home() {
         <div className="container">
           <div className="ritual-teaser__content">
             <div className="section-header">
-              <h2 className="section-title">4 Schritte. 4 Minuten.</h2>
+              <h2 className="section-title">Dein Ritual, Schritt für Schritt.</h2>
               <p className="section-subtitle">
                 Ein klarer Ablauf für Gesicht und Hals, der in wenigen Minuten machbar ist.
               </p>
             </div>
-            <div className="ritual-teaser__steps">
-              {ritualSteps.map((item) => {
-                const imgName = String.fromCharCode(96 + item.step); // 1->a, 2->b, 3->c, 4->d
-                return (
-                  <div key={item.step} className="ritual-step">
-                    <img
-                      className="ritual-step__image"
-                      src={`/img/${imgName}.png`}
-                      alt={`${item.step}. ${item.title}`}
-                      loading="lazy"
-                      decoding="async"
-                      draggable={false}
-                    />
-                    <div className="ritual-step__content">
-                      <h4 className="ritual-step__title">{item.title}</h4>
-                      <p className="ritual-step__description">{item.description}</p>
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
+            <RitualCarousel />
             <Link to="/how-to" className="btn btn--primary btn--lg btn--shimmer">
               Anleitung öffnen
             </Link>
@@ -971,120 +917,13 @@ export default function Home() {
 
       {/* Categories Section */}
 
-      {/* Reviews Section */}
-      <section className="section reviews">
-        <div className="container">
-          <div className="section-header">
-            <h2 className="section-title">Stimmen aus der Praxis</h2>
-          </div>
-          {/* Desktop-only grid */}
-          <div className="reviews__grid reviews__grid--desktop reviews__grid--desktop-only">
-            {reviews.map((review, index) => (
-              <div key={index} className="review-card review-card--grid">
-                <GlowingEffect
-                  className="review-card__glow"
-                  proximity={90}
-                  inactiveZone={0.55}
-                  variant="white"
-                  disabled={false}
-                />
-                <div className="review-card__rating">{'★'.repeat(review.rating)}</div>
-                <p className="review-card__text">"{review.text}"</p>
-                <span className="review-card__author">— {review.name}</span>
-              </div>
-            ))}
-          </div>
-          {/* Mobile-only carousel */}
-          <div className="reviews__carousel reviews__carousel--mobile reviews__carousel--mobile-only">
-            <div className="reviews__carousel-inner home-products__carousel">
-              <button
-                type="button"
-                className="home-products__arrow home-products__arrow--prev reviews__arrow--prev btn--shimmer"
-                onClick={() => scrollToReviewSlide(activeReviewSlide - 1)}
-                aria-label="Vorherige Bewertung"
-                disabled={activeReviewSlide === 0}
-              >
-                <span aria-hidden="true">‹</span>
-              </button>
-
-              <div
-                className="home-products__carousel-track reviews__carousel-track"
-                ref={reviewsCarouselRef}
-                onScroll={handleReviewsCarouselScroll}
-              >
-                {reviews.map((review, index) => (
-                  <div key={index} className="home-products__carousel-slide reviews__carousel-slide">
-                    <div className="review-card review-card--carousel">
-                      <GlowingEffect
-                        className="review-card__glow"
-                        proximity={90}
-                        inactiveZone={0.55}
-                        variant="white"
-                        disabled={false}
-                      />
-                      <div className="review-card__rating">{'★'.repeat(review.rating)}</div>
-                      <p className="review-card__text">"{review.text}"</p>
-                      <span className="review-card__author">— {review.name}</span>
-                    </div>
-                  </div>
-                ))}
-              </div>
-
-              <button
-                type="button"
-                className="home-products__arrow home-products__arrow--next reviews__arrow--next btn--shimmer"
-                onClick={() => scrollToReviewSlide(activeReviewSlide + 1)}
-                aria-label="Nächste Bewertung"
-                disabled={activeReviewSlide === reviews.length - 1}
-              >
-                <span aria-hidden="true">›</span>
-              </button>
-            </div>
-
-            <div className="home-products__dots reviews__dots">
-              {reviews.map((review, index) => (
-                <button
-                  key={index}
-                  type="button"
-                  className={`
-                    home-products__dot
-                    ${index === activeReviewSlide ? 'home-products__dot--active' : ''}
-                  `.trim()}
-                  onClick={() => scrollToReviewSlide(index)}
-                  aria-label={`Zu Bewertung ${index + 1} wechseln`}
-                />
-              ))}
-            </div>
-          </div>
-        </div>
-      </section>
-
       {/* Newsletter Section */}
       <section className="section newsletter">
         <div className="container">
           <div className="newsletter__content">
             <h2 className="newsletter__title">Restocks & kurze Tipps.</h2>
-            <p className="newsletter__subtitle">Seltene Mails. Nur wenn es wirklich relevant ist.</p>
-            <form className="newsletter__form" onSubmit={(e) => e.preventDefault()}>
-              <div className="newsletter__input-group">
-                <input
-                  type="email"
-                  className="input newsletter__input"
-                  placeholder="Deine E-Mail-Adresse"
-                  required
-                />
-                <button type="submit" className="btn btn--primary btn--shimmer">
-                  Anmelden
-                </button>
-              </div>
-              <label className="checkbox-wrapper newsletter__consent">
-                <input type="checkbox" className="checkbox" required />
-                <span className="checkbox-label">
-                  Ich stimme dem Erhalt des Newsletters zu und habe die{' '}
-                  <Link to="/legal/datenschutz">Datenschutzerklärung</Link> gelesen.
-                </span>
-              </label>
-            </form>
+            <p className="newsletter__subtitle">Die Newsletter-Anmeldung ist derzeit nicht verfügbar. Für Produkt- und Bestellfragen erreichst du uns per E-Mail.</p>
+            <Link to="/contact" className="btn btn--primary btn--shimmer">Kontakt öffnen</Link>
           </div>
         </div>
       </section>

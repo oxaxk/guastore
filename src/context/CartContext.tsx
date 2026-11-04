@@ -1,4 +1,6 @@
 import { createContext, useContext, useState, useCallback, useEffect, ReactNode } from 'react';
+import { calculateCart } from '@/lib/commerce';
+import { MAX_CART_QUANTITY, MAX_CART_LINES, normalizeCartEntry, parseStoredCart } from '@/lib/cart-policy';
 
 export interface CartItem {
   id: string;
@@ -17,6 +19,9 @@ interface CartContextType {
   isOpen: boolean;
   itemCount: number;
   subtotal: number;
+  shipping: number;
+  total: number;
+  stoneCount: number;
   addItem: (item: Omit<CartItem, 'quantity'>, quantity?: number) => void;
   removeItem: (variantId: string) => void;
   updateQuantity: (variantId: string, quantity: number) => void;
@@ -32,7 +37,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
   const [items, setItems] = useState<CartItem[]>(() => {
     try {
       const stored = localStorage.getItem('gua-shop-cart');
-      return stored ? JSON.parse(stored) : [];
+      return parseStoredCart(stored);
     } catch {
       return [];
     }
@@ -48,19 +53,21 @@ export function CartProvider({ children }: { children: ReactNode }) {
   }, [items]);
 
   const itemCount = items.reduce((sum, item) => sum + item.quantity, 0);
-  const subtotal = items.reduce((sum, item) => sum + item.price * item.quantity, 0);
+  const { subtotal, shipping, total, stoneCount } = calculateCart(items);
 
   const addItem = useCallback((item: Omit<CartItem, 'quantity'>, quantity = 1) => {
+    const normalized = normalizeCartEntry({ ...item, quantity });
+    if (!normalized) return;
     setItems(prev => {
       const existing = prev.find(i => i.variantId === item.variantId);
       if (existing) {
         return prev.map(i =>
           i.variantId === item.variantId
-            ? { ...i, quantity: i.quantity + quantity }
+            ? { ...i, ...normalized, quantity: Math.min(MAX_CART_QUANTITY, i.quantity + quantity) }
             : i
         );
       }
-      return [...prev, { ...item, quantity }];
+      return prev.length < MAX_CART_LINES ? [...prev, normalized] : prev;
     });
     setIsOpen(true);
   }, []);
@@ -70,6 +77,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const updateQuantity = useCallback((variantId: string, quantity: number) => {
+    if (!Number.isSafeInteger(quantity) || quantity > MAX_CART_QUANTITY) return;
     if (quantity < 1) {
       removeItem(variantId);
       return;
@@ -96,6 +104,9 @@ export function CartProvider({ children }: { children: ReactNode }) {
         isOpen,
         itemCount,
         subtotal,
+        shipping,
+        total,
+        stoneCount,
         addItem,
         removeItem,
         updateQuantity,

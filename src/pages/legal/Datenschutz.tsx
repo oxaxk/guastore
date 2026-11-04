@@ -10,11 +10,11 @@ export default function Datenschutz() {
           <p>
             Verantwortlich für die Datenverarbeitung auf dieser Website ist:<br />
             Onur Arda Küçük<br />
-            Slicker (Marke: GUA SHOP)<br />
+            handelnd unter GUA SHOP<br />
             Saalmannstraße 9<br />
             13403 Berlin<br />
             Deutschland<br />
-            E-Mail: info@guashop.de
+            E-Mail: info@guasha-shop.de
           </p>
 
           <h2>2. Arten der verarbeiteten Daten</h2>
@@ -43,7 +43,7 @@ export default function Datenschutz() {
               und vorvertragliche Maßnahmen).
             </li>
             <li>
-              Zur Bearbeitung von Anfragen über das Kontaktformular oder per E-Mail (Art. 6 Abs. 1 lit. b und f DSGVO).
+              Zur Bearbeitung von Anfragen oder Bestellungen per E-Mail (Art. 6 Abs. 1 lit. b und f DSGVO).
             </li>
             <li>
               Soweit wir gesetzlich zu einer Aufbewahrung verpflichtet sind (Art. 6 Abs. 1 lit. c DSGVO).
@@ -52,18 +52,12 @@ export default function Datenschutz() {
 
           <h2>4. Cookies, lokale Speicherung und Einwilligungsmanagement</h2>
           <p>
-            Unsere Website verwendet technisch notwendige Cookies und lokale Speichermechanismen, um grundlegende
-            Funktionen des Shops bereitzustellen (z. B. Warenkorb-Funktion, Session-Erkennung oder Speicherung Ihrer
-            Cookie-Auswahl).
+            Diese Website verwendet lokale Speichermechanismen, um grundlegende Funktionen bereitzustellen, insbesondere
+            um den Warenkorb auf Ihrem Gerät zu speichern. Diese Speicherung ist technisch erforderlich und wird nicht
+            für Werbung oder Profilbildung verwendet.
           </p>
           <p>
-            Zusätzlich kann – nur nach Ihrer ausdrücklichen Einwilligung – Google Analytics eingesetzt werden, um die
-            Nutzung unserer Website statistisch auszuwerten und unser Angebot zu verbessern. Die Verarbeitung erfolgt in
-            diesem Fall ausschließlich auf Grundlage Ihrer Einwilligung gemäß Art. 6 Abs. 1 lit. a DSGVO und § 25 Abs. 1
-            TDDDG. Ohne Ihre Einwilligung wird Google Analytics nicht aktiviert.
-          </p>
-          <p>
-            Ihre Cookie-Entscheidung können Sie jederzeit über die Cookie-Einstellungen anpassen oder widerrufen.
+            Google Analytics und andere Analyse- oder Marketingdienste werden derzeit nicht eingesetzt.
           </p>
 
           <h2>5. Server-Logfiles</h2>
@@ -85,7 +79,7 @@ export default function Datenschutz() {
 
           <h2>6. Kontaktaufnahme</h2>
           <p>
-            Wenn Sie uns per Kontaktformular oder E-Mail kontaktieren, werden Ihre Angaben zur Bearbeitung der Anfrage
+            Wenn Sie uns per E-Mail kontaktieren, werden Ihre Angaben zur Bearbeitung der Anfrage
             sowie für den Fall von Anschlussfragen gespeichert. Die Rechtsgrundlage ist Art. 6 Abs. 1 lit. b DSGVO
             (Durchführung vorvertraglicher Maßnahmen) bzw. Art. 6 Abs. 1 lit. f DSGVO (unser berechtigtes Interesse an
             der Bearbeitung von Anfragen).
@@ -106,9 +100,10 @@ export default function Datenschutz() {
           </p>
           <ul>
             <li>Hosting- und Infrastruktur-Dienstleister (z. B. Vercel)</li>
-            <li>Shop- und Checkout-Dienstleister (z. B. Shopify, sofern aktiviert)</li>
-            <li>Zahlungs- und Versanddienstleister im Rahmen von Bestellungen</li>
-            <li>Analyse-Dienstleister (Google Analytics) ausschließlich nach Einwilligung</li>
+            <li>Zahlungsdienstleister Stripe zur sicheren Zahlungsabwicklung und Betrugsprävention</li>
+            <li>MongoDB als Datenbankdienst für Bestell-, Bestands- und Transaktionsdaten</li>
+            <li>Google/Gmail für den Versand transaktionaler Bestell-E-Mails</li>
+            <li>Versanddienstleister im Rahmen bestätigter Bestellungen</li>
           </ul>
           <p>
             Mit eingesetzten Dienstleistern werden – soweit rechtlich erforderlich – Auftragsverarbeitungsverträge nach
@@ -139,7 +134,7 @@ export default function Datenschutz() {
           </p>
 
           <h2>11. Stand</h2>
-          <p>Stand dieser Datenschutzerklärung: März 2026.</p>
+          <p>Stand dieser Datenschutzerklärung: November 2026.</p>
         </div>
       </div>
     </div>

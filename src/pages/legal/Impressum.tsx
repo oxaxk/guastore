@@ -7,10 +7,10 @@ export default function Impressum() {
         <h1>Impressum</h1>
 
         <div className="legal-content">
-          <h2>Angaben gemäß § 5 TMG</h2>
+          <h2>Angaben gemäß § 5 DDG</h2>
           <p>
             Onur Arda Küçük<br />
-            Slicker (Marke: GUA SHOP)<br />
+            handelnd unter GUA SHOP<br />
             Saalmannstraße 9<br />
             13403 Berlin<br />
             Deutschland
@@ -18,14 +18,8 @@ export default function Impressum() {
 
           <h2>Kontakt</h2>
           <p>
-            E-Mail: info@gua.shop<br />
+            E-Mail: info@guasha-shop.de<br />
             Telefon: +49 155 11207431
-          </p>
-
-          <h2>Umsatzsteuer / Kleinunternehmer</h2>
-          <p>
-            Es wird gemäß § 19 UStG keine Umsatzsteuer ausgewiesen
-            (Kleinunternehmerregelung).
           </p>
 
           <h2>Verantwortlich für den Inhalt nach § 18 Abs. 2 MStV</h2>

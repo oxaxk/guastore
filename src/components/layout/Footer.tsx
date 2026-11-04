@@ -3,15 +3,11 @@ import { Link } from 'react-router-dom';
 
 const shopLinks = [
   { path: '/shop/the-steel', label: 'The Steel' },
-  { path: '/shop/the-jade', label: 'The Jade' },
-  { path: '/shop/the-rose', label: 'The Rose (Soon)' },
+  { path: '/shop/the-jade', label: 'Xiu Jade' },
 ];
 
 const infoLinks = [
   { path: '/how-to', label: 'How To' },
-  { path: '/compare', label: 'Compare' },
-  { path: '/faq', label: 'FAQ' },
-  { path: '/club', label: 'Club' },
   { path: '/about', label: 'About' },
 ];
 
@@ -30,36 +26,11 @@ export default function Footer() {
         <div className="footer__main">
           <div className="footer__brand">
             <Link to="/" className="footer__logo">
-              <img
-                src="/img/guawhite.png"
-                alt="GUA SHOP Logo"
-                className="footer__logo-image"
-              />
+              <span className="footer__wordmark">GUA SHA</span>
             </Link>
             <p className="footer__tagline">
-              Premium Gua Sha Tools & Rituale
+              Gua Sha für dein Ritual
             </p>
-            <div className="footer__social">
-              <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
-                  <rect x="2" y="2" width="20" height="20" rx="5" ry="5"/>
-                  <path d="M16 11.37A4 4 0 1112.63 8 4 4 0 0116 11.37z"/>
-                  <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/>
-                </svg>
-              </a>
-              <a href="https://pinterest.com" target="_blank" rel="noopener noreferrer" aria-label="Pinterest">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
-                  <circle cx="12" cy="12" r="10"/>
-                  <path d="M9.5 14.25c-.5 2.5-1 5-.5 6.75"/>
-                  <path d="M12 12a3 3 0 100-6 3 3 0 000 6z"/>
-                </svg>
-              </a>
-              <a href="https://tiktok.com" target="_blank" rel="noopener noreferrer" aria-label="TikTok">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
-                  <path d="M9 12a4 4 0 104 4V4a5 5 0 005 5"/>
-                </svg>
-              </a>
-            </div>
           </div>
 
           <div className="footer__links">
@@ -102,15 +73,7 @@ export default function Footer() {
           <p className="footer__copyright">
             © {new Date().getFullYear()} GUA SHOP. Alle Rechte vorbehalten.
           </p>
-          <div className="footer__payment">
-            <span>Sichere Zahlung mit</span>
-            <div className="footer__payment-icons">
-              <span>PayPal</span>
-              <span>Visa</span>
-              <span>Mastercard</span>
-              <span>Klarna</span>
-            </div>
-          </div>
+          <p className="footer__payment">Kundenservice: <a href="mailto:info@guasha-shop.de">info@guasha-shop.de</a></p>
         </div>
       </div>
     </footer>

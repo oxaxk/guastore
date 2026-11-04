@@ -27,4 +27,4 @@
   .content-block { margin-bottom: var(--space-8); }
   .steps-grid { grid-template-columns: 1fr; gap: var(--space-4); }
   .coming-soon { padding: var(--space-10); }
-}
+}.how-to-page{background:#faf8f5}.how-to-page__eyebrow{text-align:center;letter-spacing:.22em;font-size:12px;color:#755d49;margin-bottom:14px}.how-to-page .lead{max-width:700px;color:#4e4943;line-height:1.7}.how-to-page h1{font-size:clamp(42px,6vw,70px)}

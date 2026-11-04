@@ -2,6 +2,7 @@ import './Shop.css';
 import { useState } from 'react';
 import ProductCard from '@/components/shop/ProductCard';
 import { mockProducts, mockCollections } from '@/data/mockData';
+import { cataloguePrice, SHIPPING_DE_COPY } from '@/lib/commerce';
 
 export default function Shop() {
   const [activeFilter, setActiveFilter] = useState('all');
@@ -9,20 +10,20 @@ export default function Shop() {
 
   const withCardOverrides = (product: any) => {
     const titleLc = String(product?.title ?? '').toLowerCase();
-    const isSteel = titleLc.includes('edelstahl');
-    const isJade = titleLc.includes('jade');
+    const isSteel = product?.handle === 'the-steel' || titleLc.includes('edelstahl') || titleLc.includes('the steel');
+    const isJade = product?.handle === 'the-jade' || titleLc.includes('xiu jade');
     const isRose = titleLc.includes('rosenquarz') || titleLc.includes('rose') || titleLc.includes('rosa');
 
     const imageOverride = isSteel
-      ? '/img/guasteal.png'
+      ? '/img/steel/the-steel-matched-v3.png'
       : isJade
         ? '/img/guagreen.png'
         : isRose
           ? '/img/guarosa.png'
           : undefined;
 
-    const priceOverride = isSteel ? 11.95 : isJade ? 9.95 : isRose ? 11.95 : undefined;
-    const compareAtOverride = isSteel ? 15.9 : isJade ? 12.9 : isRose ? 15.95 : undefined;
+    const priceOverride = cataloguePrice(product.handle, product.price);
+    const compareAtOverride = undefined;
 
     if (!imageOverride && priceOverride == null && compareAtOverride == null && !isRose) return product;
 
@@ -31,7 +32,7 @@ export default function Shop() {
       image: imageOverride ?? product.image,
       images: imageOverride ? [imageOverride] : product.images,
       price: priceOverride ?? product.price,
-      compareAtPrice: compareAtOverride ?? product.compareAtPrice,
+      compareAtPrice: compareAtOverride,
       // mirror the Home behaviour: Rosenquarz is forced sold out
       availableForSale: isRose ? false : product.availableForSale,
       soldOut: isRose ? true : product.soldOut,
@@ -58,7 +59,7 @@ export default function Shop() {
   const baseProducts = (activeFilter === 'all'
     ? mockProducts
     : mockProducts.filter((p: any) => p.tags.includes(activeFilter))
-  ).filter((p: any) => !isEbookProduct(p));
+  ).filter((p: any) => !isEbookProduct(p) && p.handle !== 'the-rose');
 
   const productsWithOverrides = baseProducts.map(withCardOverrides);
 
@@ -86,6 +87,8 @@ export default function Shop() {
         <div className="shop-page__header">
           <h1>Shop</h1>
           <p>Entdecke unsere hochwertigen Gua Sha Tools und Selfcare Produkte</p>
+          <p>{SHIPPING_DE_COPY}</p>
+          <p>Alle angegebenen Preise sind Endpreise.</p>
         </div>
 
         <div className="shop-page__filters">
@@ -103,7 +106,7 @@ export default function Shop() {
           </select>
         </div>
 
-        <div className="shop-page__grid">
+        <div className="shop-page__grid" id="products">
           {filteredProducts.map(product => (
             <ProductCard key={product.id} product={product} />
           ))}

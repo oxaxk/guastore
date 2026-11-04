@@ -3,6 +3,9 @@ import { useState, type ReactNode } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { useCart } from '@/context/CartContext';
 import { mockProducts } from '@/data/mockData';
+import SteelGallery from '@/components/shop/SteelGallery';
+import { cataloguePrice, formatPrice, SHIPPING_DE_COPY } from '@/lib/commerce';
+import { MAX_CART_QUANTITY } from '@/lib/cart-policy';
 
 export default function ProductDetail() {
   const { handle } = useParams<{ handle: string }>();
@@ -15,20 +18,29 @@ export default function ProductDetail() {
   if (!product) return <div className="container section"><h1>Produkt nicht gefunden</h1><Link to="/shop">Zurück zum Shop</Link></div>;
 
   const titleLc = product.title.toLowerCase();
-  const isSteel = titleLc.includes('edelstahl');
-  const isJade = titleLc.includes('jade');
-  const isRose = titleLc.includes('rosenquarz') || titleLc.includes('rose') || titleLc.includes('rosa');
+  const isSteel = product.handle === 'the-steel' || titleLc.includes('edelstahl');
+  const isJade = product.handle === 'the-jade' || titleLc.includes('xiu jade');
+  const isRose = product.handle === 'the-rose' || titleLc.includes('rosenquarz') || titleLc.includes('rose') || titleLc.includes('rosa');
+  const materialTheme = isSteel ? 'steel' : isJade ? 'jade' : isRose ? 'rose' : 'default';
+  const materialLabel = isSteel ? '304 Edelstahl' : isJade ? 'Xiu Jade' : isRose ? 'Rosenquarz' : 'Gua Sha Tool';
+  const materialNote = isSteel
+    ? 'Spiegelpoliert · rund geschliffen'
+    : isJade
+      ? 'Individuelle Optik · jedes Stück einzigartig'
+      : isRose
+        ? 'Glatt polierte Naturstein-Oberfläche'
+        : 'Für deine Pflegeroutine';
 
   const imageOverride = isSteel
-    ? '/img/guasteal.png'
+    ? '/img/steel/the-steel-matched-v3.png'
     : isJade
       ? '/img/guagreen.png'
       : isRose
         ? '/img/guarosa.png'
         : undefined;
 
-  const priceOverride = isSteel ? 11.95 : isJade ? 9.95 : isRose ? 11.95 : undefined;
-  const compareAtOverride = isSteel ? 15.9 : isJade ? 12.9 : isRose ? 15.95 : undefined;
+  const priceOverride = cataloguePrice(product.handle, product.price);
+  const compareAtOverride = undefined;
 
   // Home forces Rosenquarz sold-out — mirror that behaviour on the PDP for consistency
   const forcedSoldOut = isRose;
@@ -37,7 +49,12 @@ export default function ProductDetail() {
     ? [imageOverride]
     : (product.images?.length ? product.images : [product.image]);
 
-  const p: any = product as any;
+  const p = product as typeof product & {
+    soldOut?: boolean;
+    isSoldOut?: boolean;
+    quantityAvailable?: number;
+    inventoryQuantity?: number;
+  };
   const primaryVariant = product.variants?.[0];
 
   const isSoldOut =
@@ -48,7 +65,7 @@ export default function ProductDetail() {
     Number(p?.quantityAvailable ?? p?.inventoryQuantity ?? 1) <= 0;
 
   const displayPrice: number = (priceOverride ?? primaryVariant?.price ?? product.price) as number;
-  const displayCompareAt: number | undefined = (compareAtOverride ?? primaryVariant?.compareAtPrice ?? product.compareAtPrice ?? undefined) as
+  const displayCompareAt: number | undefined = (isSteel || isJade ? undefined : compareAtOverride ?? primaryVariant?.compareAtPrice ?? product.compareAtPrice ?? undefined) as
     | number
     | undefined;
 
@@ -59,15 +76,10 @@ export default function ProductDetail() {
     return t.includes('ebook') || t.includes('e-book') || t.includes('guide') || product.tags?.includes('ebook');
   })();
 
-  const formatPrice = (price: number) => new Intl.NumberFormat('de-DE', { style: 'currency', currency: 'EUR' }).format(price);
-
   type TabKey = 'details' | 'anwendung' | 'pflege' | 'versand';
 
   const getTabContent = (productTitle: string): Record<TabKey, ReactNode> => {
     const title = productTitle.toLowerCase();
-    const isSteel = title.includes('edelstahl');
-    const isJade = title.includes('jade');
-    const isRose = title.includes('rosenquarz');
     const isEbook = title.includes('ebook') || title.includes('e-book') || title.includes('guide');
 
     if (isEbook) {
@@ -94,16 +106,16 @@ export default function ProductDetail() {
     }
 
     const physicalShipping =
-      'Der Versand erfolgt klimaneutral innerhalb Deutschlands in 2–4 Werktagen. Dein Gua Sha wird sicher verpackt in einer schützenden Box geliefert – ideal auch als Geschenk.';
+      `${SHIPPING_DE_COPY}. Edelstahl und Xiu Jade können kombiniert werden. Die Lieferzeit innerhalb Deutschlands beträgt in der Regel 2–4 Werktage.`;
 
     if (isSteel) {
       return {
         details: (
           <ul className="tab-list">
-            <li>Material: 304-Edelstahl, ca. 80 g.</li>
-            <li>Oberfläche: extra glatt, kühlend und bruchsicher.</li>
-            <li>Form: ergonomische Kanten für Kieferlinie, Wangen und Stirn.</li>
-            <li>Ideal zur Aufbewahrung im Kühlschrank für einen Extra-Kühleffekt.</li>
+            <li>Spiegelpolierter Edelstahl mit glatter Vorder- und Rückseite.</li>
+            <li>Dünnes Profil mit umlaufend weich gerundeter Kante.</li>
+            <li>Asymmetrische Kontur mit zwei Rundungen und sanfter Mulde.</li>
+            <li>Dezente Gua-Sha-Gravur auf der Vorderseite.</li>
           </ul>
         ),
         anwendung: (
@@ -125,8 +137,8 @@ export default function ProductDetail() {
       return {
         details: (
           <ul className="tab-list">
-            <li>Material: echter Jade-Stein, ca. 60 g.</li>
-            <li>Jede Platte ist ein Unikat mit natürlicher Maserung.</li>
+            <li>Produktbezeichnung: Xiu Jade.</li>
+            <li>Farbton und Optik können von Stück zu Stück abweichen.</li>
             <li>Sanft kühlendes Gefühl auf der Haut – ideal für Morgen- und Abendroutine.</li>
           </ul>
         ),
@@ -148,9 +160,9 @@ export default function ProductDetail() {
       return {
         details: (
           <ul className="tab-list">
-            <li>Material: Rosenquarz, ca. 70 g.</li>
+            <li>Produktbezeichnung: The Rose.</li>
             <li>Glatt polierte Oberfläche für besonders sanfte Anwendungen.</li>
-            <li>Beliebt für beruhigende Abend-Rituale und Lymphdrainage.</li>
+            <li>Für ein ruhiges Pflegeritual.</li>
           </ul>
         ),
         anwendung: (
@@ -203,7 +215,7 @@ export default function ProductDetail() {
         variantTitle: variant.title,
         price: displayPrice,
         compareAtPrice: displayCompareAt,
-        image: product.image,
+        image: imageOverride ?? product.image,
         handle: product.handle,
       },
       quantity
@@ -211,44 +223,55 @@ export default function ProductDetail() {
   };
 
   return (
-    <div className="product-detail">
+    <div className={`product-detail product-detail--${materialTheme}`}>
       <div className="container">
         <nav className="breadcrumb"><Link to="/">Home</Link> / <Link to="/shop">Shop</Link> / <span>{product.title}</span></nav>
         <div className="product-detail__grid">
           <div className="product-detail__gallery">
-            <div className="product-detail__main-image"><img src={displayImages[activeImage] || displayImages[0]} alt={product.title} /></div>
+            {isSteel ? <SteelGallery /> : <>
+            <div className="product-detail__main-image">
+              <div className="product-detail__material-label">{materialLabel}</div>
+              <img src={displayImages[activeImage] || displayImages[0]} alt={`${product.title} – ${materialLabel}`} />
+              <div className="product-detail__material-note">{materialNote}</div>
+            </div>
             {displayImages.length > 1 && (
               <div className="product-detail__thumbs">
                 {displayImages.map((img, i) => (
                   <button
                     key={i}
                     className={`product-detail__thumb ${i === activeImage ? 'active' : ''}`}
+                    type="button"
                     onClick={() => setActiveImage(i)}
+                    aria-label={`Bild ${i + 1} von ${product.title} anzeigen`}
                   >
                     <img src={img} alt="" />
                   </button>
                 ))}
               </div>
             )}
+            </>}
           </div>
           <div className="product-detail__info">
+            <p className="product-detail__eyebrow">GUA SHOP · {materialLabel}</p>
             <h1>{product.title}</h1>
             {isSoldOut && <div className="product-detail__soldout">Ausverkauft</div>}
-            <div className="product-detail__price">
+            {!isRose && <div className="product-detail__price">
               <span className="current">{formatPrice(displayPrice)}</span>
               {isOnSale && displayCompareAt && <span className="compare">{formatPrice(displayCompareAt)}</span>}
-            </div>
+            </div>}
+            {!isDigitalProduct && !isRose && <p className="product-detail__shipping"><Link to="/legal/versand">{SHIPPING_DE_COPY}</Link></p>}
             <p className="product-detail__desc">{product.description}</p>
             <div className="product-detail__actions">
-              {!isDigitalProduct && (
+              {!isDigitalProduct && !isRose && (
                 <div className="quantity-selector">
-                  <button onClick={() => setQuantity(Math.max(1, quantity - 1))}>−</button>
-                  <span>{quantity}</span>
-                  <button onClick={() => setQuantity(quantity + 1)}>+</button>
+                  <button type="button" onClick={() => setQuantity(Math.max(1, quantity - 1))} aria-label="Menge verringern">−</button>
+                  <span aria-live="polite">{quantity}</span>
+                  <button type="button" onClick={() => setQuantity(Math.min(MAX_CART_QUANTITY, quantity + 1))} disabled={quantity >= MAX_CART_QUANTITY} aria-label="Menge erhöhen">+</button>
                 </div>
               )}
               <button
                 className={`btn btn--primary btn--lg ${isSoldOut ? 'product-detail__cta--soldout' : ''}`}
+                type="button"
                 onClick={handleAddToCart}
                 disabled={isSoldOut}
                 aria-disabled={isSoldOut}
@@ -261,8 +284,10 @@ export default function ProductDetail() {
                 {(['details', 'anwendung', 'pflege', 'versand'] as const).map((tab) => (
                   <button
                     key={tab}
+                    type="button"
                     className={activeTab === tab ? 'active' : ''}
                     onClick={() => setActiveTab(tab)}
+                    aria-pressed={activeTab === tab}
                   >
                     {tab === 'details' && 'Details'}
                     {tab === 'anwendung' && 'Anwendung'}
@@ -275,8 +300,26 @@ export default function ProductDetail() {
                 {tabContent[activeTab]}
               </div>
             </div>
+            {!isDigitalProduct && (isSteel || isJade) && (
+              <section className="product-detail__safety" aria-labelledby="product-safety-title">
+                <h2 id="product-safety-title">Produktsicherheit</h2>
+                <p><strong>Hinweise:</strong> Nur mit sanftem Druck auf gereinigter Haut mit Öl oder Serum anwenden. Nicht auf verletzter oder gereizter Haut verwenden. Bei Irritation die Anwendung abbrechen. Nach Gebrauch reinigen und trocken lagern. Kein Medizinprodukt.</p>
+              </section>
+            )}
           </div>
         </div>
+        {isSteel && <section className="steel-craft" aria-labelledby="steel-craft-heading">
+          <img src="/img/steel/the-steel-rounded-edge.webp" width="1254" height="1254" alt="Gerundeter Rand des spiegelpolierten Edelstahl Gua Sha in Nahaufnahme" loading="lazy" />
+          <div>
+            <h2 id="steel-craft-heading">Spiegelpoliert.<br />Rund bis zum Rand.</h2>
+            <p>Die glatte Fläche geht weich in die Kante über. Licht wandert als heller Reflex über das Metall und macht die feine Rundung sichtbar.</p>
+            <ul>
+              <li><strong>Weiche Übergänge</strong><span>Rund geschliffene Seiten entlang der gesamten Kontur.</span></li>
+              <li><strong>Schlankes Profil</strong><span>Eine flache Form, die sich beim Anlegen gut kontrollieren lässt.</span></li>
+              <li><strong>Echter Metallcharakter</strong><span>Die polierte Oberfläche spiegelt ihre Umgebung – von hellem Silber bis zu dunklen Reflexen.</span></li>
+            </ul>
+          </div>
+        </section>}
       </div>
     </div>
   );

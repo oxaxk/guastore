@@ -18,4 +18,4 @@
   .shop-page__sort { width: 100%; min-width: 0; }
   .shop-page__grid { grid-template-columns: repeat(2, 1fr); gap: var(--space-4); }
 }
-@media (max-width: 480px) { .shop-page__grid { grid-template-columns: 1fr; } }
+@media (max-width: 480px) { .shop-page__grid { grid-template-columns: 1fr; } }.shop-page{background:#faf8f5}.shop-page__header{max-width:750px;margin-inline:auto}.shop-page__header p{line-height:1.65}.shop-page__chips .chip{min-height:44px}.shop-page__grid{grid-template-columns:repeat(3,minmax(0,1fr))}@media(max-width:767px){.shop-page__grid{grid-template-columns:repeat(2,minmax(0,1fr))}}@media(max-width:520px){.shop-page__grid{grid-template-columns:1fr}}
