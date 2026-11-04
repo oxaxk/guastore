@@ -166,7 +166,7 @@ export default function CartDrawer() {
                 {checkoutState === 'loading' ? 'Sicherer Checkout wird geöffnet …' : 'Sicher mit Stripe bezahlen'}
               </button>
               {checkoutState === 'error' && <p className="cart-drawer__error" role="alert">Checkout derzeit nicht erreichbar. Bitte versuche es gleich erneut.</p>}
-              <p className="cart-drawer__note">Du wirst zum sicheren Stripe-Testcheckout weitergeleitet. Die Bestellung wird erst nach bestätigter Zahlung verarbeitet.</p>
+              <p className="cart-drawer__note">Du wirst zum sicheren Stripe-Checkout weitergeleitet. Die Bestellung wird erst nach bestätigter Zahlung verarbeitet.</p>
               <button 
                 className="btn btn--ghost btn--full"
                 onClick={closeCart}

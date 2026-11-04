@@ -8,7 +8,6 @@ const navLinks = [
   { path: '/shop', label: 'Shop' },
   { path: '/how-to', label: 'Anwendung' },
   { path: '/about', label: 'Über uns' },
-  { path: '/konto', label: 'Kundenkonto' },
 ];
 
 export default function Header() {

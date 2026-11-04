@@ -2,8 +2,8 @@ import './Footer.css';
 import { Link } from 'react-router-dom';
 
 const shopLinks = [
-  { path: '/shop/the-steel', label: 'The Steel' },
-  { path: '/shop/the-jade', label: 'Xiu Jade' },
+  { path: '/shop/product/the-steel', label: 'The Steel' },
+  { path: '/shop/product/the-jade', label: 'Xiu Jade' },
 ];
 
 const infoLinks = [

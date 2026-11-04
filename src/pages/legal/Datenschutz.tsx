@@ -102,7 +102,7 @@ export default function Datenschutz() {
             <li>Hosting- und Infrastruktur-Dienstleister (z. B. Vercel)</li>
             <li>Zahlungsdienstleister Stripe zur sicheren Zahlungsabwicklung und Betrugsprävention</li>
             <li>MongoDB als Datenbankdienst für Bestell-, Bestands- und Transaktionsdaten</li>
-            <li>Google/Gmail für den Versand transaktionaler Bestell-E-Mails</li>
+            <li>STRATO für den Versand transaktionaler Bestell-E-Mails</li>
             <li>Versanddienstleister im Rahmen bestätigter Bestellungen</li>
           </ul>
           <p>
