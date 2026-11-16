@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import ProductCard from '@/components/shop/ProductCard';
 import RitualCarousel from '@/components/shop/RitualCarousel';
 import { mockProducts, mockCollections } from '@/data/mockData';
-import { cataloguePrice, formatPrice, JADE_PRICE_CENTS, KLEINUNTERNEHMER_COPY, STEEL_PRICE_CENTS, SHIPPING_DE_COPY } from '@/lib/commerce';
+import { cataloguePrice, formatPrice, JADE_PRICE_CENTS, STEEL_PRICE_CENTS } from '@/lib/commerce';
 
 const benefits = [
   {
@@ -740,8 +740,9 @@ export default function Home() {
                   </Link>
                 );
               })()}
-              {!heroProductMeta[activeHeroSlide]?.soldOut && <p className="hero__shipping">{SHIPPING_DE_COPY}</p>}
-              {!heroProductMeta[activeHeroSlide]?.soldOut && <p className="hero__shipping">{KLEINUNTERNEHMER_COPY}</p>}
+              <Link className="hero__price-info-link" to="/legal/versand">
+                {heroProductMeta[activeHeroSlide]?.soldOut ? 'Versand & Preisinfo' : 'zzgl. Versand · Preisinfo'}
+              </Link>
             </div>
           </div>
         </div>

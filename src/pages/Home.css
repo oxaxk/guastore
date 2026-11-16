@@ -44,7 +44,23 @@
   letter-spacing: 0.08em;
 }
 
-.hero__shipping { max-width: 30rem; margin: 0 auto; padding-inline: 0.5rem; color: #53616d; font-size: 0.8rem; line-height: 1.6; text-align: center; }
+.hero__price-info-link {
+  display: inline-flex;
+  min-height: 32px;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto;
+  padding: 4px 8px;
+  color: #4b5964;
+  font-size: 0.8rem;
+  line-height: 1.35;
+  text-align: center;
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+}
+.hero__price-info-link:hover { color: #252321; }
+.hero__price-info-link:focus-visible { outline: 2px solid currentColor; outline-offset: 3px; border-radius: 4px; }
 .hero__eyebrowPrice { font-size: 1rem; font-weight: 600; white-space: nowrap; }
 
 .hero__title {
@@ -1672,7 +1688,7 @@
   .home .hero__content { order: 1; width: 100%; }
   .home .hero__image-stage { min-height: 270px; height: 72vw; max-height: 360px; }
   .home .hero__subtitle, .home .section-subtitle, .home .benefit-card__description { font-size: 1rem !important; line-height: 1.65; }
-  .home .hero__shipping { font-size: 0.94rem; }
+  .home .hero__price-info-link { font-size: 0.94rem; }
   .home .hero__trust { flex-wrap: wrap; }
   .home .benefits__carousel-track { grid-template-columns: 1fr; gap: 12px; }
   .home .benefit-card { min-height: 0; padding: 22px !important; }
@@ -1731,10 +1747,7 @@
   .home .hero__image-meta { gap: 3px; }
   .home .hero__eyebrow--underImage { margin-bottom: 2px; }
 
-  .home .hero__shipping {
-    font-size: 0.78rem !important;
-    line-height: 1.42;
-  }
+  .home .hero__price-info-link { font-size: 0.78rem !important; }
 
   .home .hero__content {
     max-width: none;

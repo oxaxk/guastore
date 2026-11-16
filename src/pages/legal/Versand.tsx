@@ -5,12 +5,16 @@ export default function Versand() {
     <div className="static-page"><div className="container">
       <h1>Versand & Lieferung</h1>
       <div className="legal-content">
+        <h2>Preise und Umsatzsteuer</h2>
+        <p>
+          Alle im Shop angegebenen Preise sind Endpreise. {KLEINUNTERNEHMER_COPY}
+        </p>
+
         <h2>Versandkosten</h2>
         <p>
           Innerhalb Deutschlands berechnen wir für einen Stein {formatPrice(SHIPPING_DE_CENTS / 100)} Versandkosten.
           Ab {FREE_SHIPPING_STONE_COUNT} Steinen pro Bestellung liefern wir innerhalb Deutschlands versandkostenfrei.
           Edelstahl und Xiu Jade können dabei kombiniert werden. Entscheidend ist die Stückzahl, nicht der Bestellwert.
-          {' '}{KLEINUNTERNEHMER_COPY}
         </p>
 
         <h2>Lieferzeiten</h2>
