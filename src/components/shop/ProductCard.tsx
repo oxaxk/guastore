@@ -45,7 +45,7 @@ export default function ProductCard({ product }: ProductCardProps) {
 
   return (
     <article className="product-card">
-      <Link to={`/shop/${product.handle}`} className="product-card__link">
+      <Link to={`/shop/product/${product.handle}`} className="product-card__link">
         <div className="product-card__image-wrapper">
           <img 
             src={product.image} 
@@ -98,7 +98,7 @@ export default function ProductCard({ product }: ProductCardProps) {
           {isSoldOut ? 'Ausverkauft' : 'In den Warenkorb'}
         </button>
         <Link 
-          to={`/shop/${product.handle}`}
+          to={`/shop/product/${product.handle}`}
           className="btn btn--secondary btn--sm"
         >
           Details

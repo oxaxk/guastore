@@ -3,7 +3,7 @@ import { Expand, X } from 'lucide-react';
 import './SteelGallery.css';
 
 const photographs = [
-  { src: '/img/steel/the-steel-matched-v3.png', label: 'Gesamtansicht', alt: 'The Steel mit spiegelpolierter Vorderseite, asymmetrischer Kontur und feiner Gravur', note: 'Produktansicht' },
+  { src: '/img/steel/the-steel-jade-aligned.png', label: 'Gesamtansicht', alt: 'The Steel mit spiegelpolierter Vorderseite, asymmetrischer Kontur und feiner Gravur', note: 'Angepasste Produktvisualisierung' },
   { src: '/img/steel/the-steel-rounded-edge.webp', label: 'Kantendetail', alt: 'Nahansicht der weich gerundeten, polierten Edelstahlkante', note: 'Kante im Detail' },
 ] as const;
 

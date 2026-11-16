@@ -13,6 +13,11 @@ export default function CookieBanner() {
     }
   }, []);
 
+  useEffect(() => {
+    document.documentElement.classList.toggle('cookie-banner-visible', isVisible);
+    return () => document.documentElement.classList.remove('cookie-banner-visible');
+  }, [isVisible]);
+
   const closeBanner = () => {
     try { localStorage.setItem('cookie-consent', 'acknowledged'); } catch { /* Dismiss still works for this visit. */ }
     setIsVisible(false);
@@ -24,8 +29,7 @@ export default function CookieBanner() {
     <div className="cookie-banner" role="dialog" aria-label="Hinweis zur lokalen Speicherung">
       <div className="cookie-banner__content">
         <p className="cookie-banner__text">
-          Wir speichern deinen Warenkorb ausschließlich lokal auf deinem Gerät, damit GUA SHOP zuverlässig funktioniert.
-          Mehr Informationen findest du in unserer{' '}
+          Warenkorb lokal gespeichert. Details in der{' '}
           <a href="/legal/datenschutz">Datenschutzerklärung</a>.
         </p>
         <div className="cookie-banner__actions">

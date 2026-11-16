@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import ProductCard from '@/components/shop/ProductCard';
 import RitualCarousel from '@/components/shop/RitualCarousel';
 import { mockProducts, mockCollections } from '@/data/mockData';
-import { cataloguePrice, formatPrice, JADE_PRICE_CENTS, STEEL_PRICE_CENTS, SHIPPING_DE_COPY } from '@/lib/commerce';
+import { cataloguePrice, formatPrice, JADE_PRICE_CENTS, KLEINUNTERNEHMER_COPY, STEEL_PRICE_CENTS, SHIPPING_DE_COPY } from '@/lib/commerce';
 
 const benefits = [
   {
@@ -60,7 +60,7 @@ const ritualSteps = [
   },
 ];
 
-const heroImages = ['/img/steel/the-steel-matched-v3.png', '/img/guagreen.png', '/img/guarosa.png'];
+const heroImages = ['/img/steel/the-steel-jade-aligned.png', '/img/guagreen.png', '/img/guarosa.png'];
 const HeroProductVisual = ({ index }: { index: number }) => <img className="hero__image-img" src={heroImages[index]} alt={index === 0 ? 'Edelstahl Gua Sha' : index === 1 ? 'Xiu Jade Gua Sha' : 'Rosenquarz Gua Sha'} decoding="async" draggable={false} />;
 interface GlowingEffectProps {
   inactiveZone?: number;
@@ -249,7 +249,7 @@ export default function Home() {
 
     const hay = `${title} ${handle} ${id}`;
 
-    if (hay.includes('edelstahl') || hay.includes('steel') || hay.includes('stainless')) return '/img/steel/the-steel-matched-v3.png';
+    if (hay.includes('edelstahl') || hay.includes('steel') || hay.includes('stainless')) return '/img/steel/the-steel-jade-aligned.png';
     if (hay.includes('jade') || hay.includes('green')) return '/img/guagreen.png';
     if (hay.includes('rosen') || hay.includes('quarz') || hay.includes('rose') || hay.includes('rosa')) return '/img/guarosa.png';
 
@@ -578,11 +578,6 @@ export default function Home() {
                 Anleitung
               </Link>
             </div>
-            <div className="hero__trust">
-              {['Edelstahl', 'Xiu Jade', 'Rosenquarz'].map((label, index) => (
-                <button key={label} type="button" className="hero__trust-badge hero__trust-badge--link" aria-pressed={activeHeroSlide === index} onClick={() => goToHeroSlide(index > activeHeroSlide ? 'next' : 'prev', index)}>{label}</button>
-              ))}
-            </div>
           </div>
           <div className="hero__image">
             <div className="hero__image-row">
@@ -707,6 +702,11 @@ export default function Home() {
                 </svg>
               </button>
             </div>
+            <div className="hero__trust" aria-label="Material auswählen">
+              {['Edelstahl', 'Xiu Jade', 'Rosenquarz'].map((label, index) => (
+                <button key={label} type="button" className="hero__trust-badge hero__trust-badge--link" aria-pressed={activeHeroSlide === index} onClick={() => goToHeroSlide(index > activeHeroSlide ? 'next' : 'prev', index)}>{label}</button>
+              ))}
+            </div>
             <div className="hero__image-meta">
               {(() => {
                 const isHeroSoldOut = !!heroProductMeta[activeHeroSlide]?.soldOut;
@@ -741,6 +741,7 @@ export default function Home() {
                 );
               })()}
               {!heroProductMeta[activeHeroSlide]?.soldOut && <p className="hero__shipping">{SHIPPING_DE_COPY}</p>}
+              {!heroProductMeta[activeHeroSlide]?.soldOut && <p className="hero__shipping">{KLEINUNTERNEHMER_COPY}</p>}
             </div>
           </div>
         </div>

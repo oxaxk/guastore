@@ -2,7 +2,7 @@ import './Shop.css';
 import { useState } from 'react';
 import ProductCard from '@/components/shop/ProductCard';
 import { mockProducts, mockCollections } from '@/data/mockData';
-import { cataloguePrice, SHIPPING_DE_COPY } from '@/lib/commerce';
+import { cataloguePrice, KLEINUNTERNEHMER_COPY, SHIPPING_DE_COPY } from '@/lib/commerce';
 
 export default function Shop() {
   const [activeFilter, setActiveFilter] = useState('all');
@@ -15,7 +15,7 @@ export default function Shop() {
     const isRose = titleLc.includes('rosenquarz') || titleLc.includes('rose') || titleLc.includes('rosa');
 
     const imageOverride = isSteel
-      ? '/img/steel/the-steel-matched-v3.png'
+      ? '/img/steel/the-steel-jade-aligned.png'
       : isJade
         ? '/img/guagreen.png'
         : isRose
@@ -88,7 +88,7 @@ export default function Shop() {
           <h1>Shop</h1>
           <p>Entdecke unsere hochwertigen Gua Sha Tools und Selfcare Produkte</p>
           <p>{SHIPPING_DE_COPY}</p>
-          <p>Alle angegebenen Preise sind Endpreise.</p>
+          <p>Alle angegebenen Preise sind Endpreise. {KLEINUNTERNEHMER_COPY}</p>
         </div>
 
         <div className="shop-page__filters">

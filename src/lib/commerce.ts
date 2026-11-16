@@ -4,6 +4,7 @@ export const JADE_PRICE_CENTS = 599;
 export const SHIPPING_DE_CENTS = 199;
 export const FREE_SHIPPING_STONE_COUNT = 2;
 export const SHIPPING_DE_COPY = '1,99 € Versand in Deutschland · ab 2 Steinen versandkostenfrei';
+export const KLEINUNTERNEHMER_COPY = 'Umsatzsteuerbefreit nach § 19 UStG (Kleinunternehmerregelung); Umsatzsteuer wird nicht ausgewiesen.';
 
 export function isCatalogueStone(handle: string) {
   return handle === 'the-steel' || handle === 'the-jade';

@@ -1,5 +1,5 @@
 import '../StaticPage.css';
-import { formatPrice, SHIPPING_DE_CENTS, FREE_SHIPPING_STONE_COUNT } from '@/lib/commerce';
+import { formatPrice, SHIPPING_DE_CENTS, FREE_SHIPPING_STONE_COUNT, KLEINUNTERNEHMER_COPY } from '@/lib/commerce';
 export default function Versand() {
   return (
     <div className="static-page"><div className="container">
@@ -10,6 +10,7 @@ export default function Versand() {
           Innerhalb Deutschlands berechnen wir für einen Stein {formatPrice(SHIPPING_DE_CENTS / 100)} Versandkosten.
           Ab {FREE_SHIPPING_STONE_COUNT} Steinen pro Bestellung liefern wir innerhalb Deutschlands versandkostenfrei.
           Edelstahl und Xiu Jade können dabei kombiniert werden. Entscheidend ist die Stückzahl, nicht der Bestellwert.
+          {' '}{KLEINUNTERNEHMER_COPY}
         </p>
 
         <h2>Lieferzeiten</h2>

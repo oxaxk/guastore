@@ -18,8 +18,7 @@ export default function Impressum() {
 
           <h2>Kontakt</h2>
           <p>
-            E-Mail: info@guasha-shop.de<br />
-            Telefon: +49 155 11207431
+            E-Mail: info@guasha-shop.de
           </p>
 
           <h2>Verantwortlich für den Inhalt nach § 18 Abs. 2 MStV</h2>

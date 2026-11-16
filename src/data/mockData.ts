@@ -15,7 +15,7 @@ export const mockProducts: Product[] = [
       'Spiegelpolierter Edelstahl, weich gerundete Kanten und eine sanft gewölbte, asymmetrische Form. Für kontrollierte Bewegungen in deiner täglichen Gesichtspflege.',
     price: STEEL_PRICE_CENTS / 100,
     currency: 'EUR',
-    image: '/img/steel/the-steel-matched-v3.png',
+    image: '/img/steel/the-steel-jade-aligned.png',
     images: ['/img/steel/the-steel-studio.webp', '/img/steel/the-steel-rounded-edge.webp'],
     variants: [
       {

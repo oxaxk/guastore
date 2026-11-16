@@ -1,4 +1,5 @@
 import '../StaticPage.css';
+import { KLEINUNTERNEHMER_COPY } from '@/lib/commerce';
 export default function AGB() {
   return (
     <div className="static-page">
@@ -28,7 +29,7 @@ export default function AGB() {
         <p>
           Alle im Shop angegebenen Preise sind Endpreise. Versandkosten innerhalb Deutschlands werden im Warenkorb und
           unmittelbar vor Abgabe der Bestellung ausgewiesen. Die Zahlung erfolgt über die im Stripe-Checkout angebotenen
-          Zahlungsarten. Die Belastung richtet sich nach der dort ausgewählten Zahlungsart.
+          Zahlungsarten. Die Belastung richtet sich nach der dort ausgewählten Zahlungsart. {KLEINUNTERNEHMER_COPY}
         </p>
 
         <h2>§ 5 Lieferung und Versand</h2>

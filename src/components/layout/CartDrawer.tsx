@@ -1,7 +1,7 @@
 import './CartDrawer.css';
 import { useCart } from '@/context/CartContext';
 import { Link } from 'react-router-dom';
-import { formatPrice } from '@/lib/commerce';
+import { formatPrice, KLEINUNTERNEHMER_COPY } from '@/lib/commerce';
 import { useEffect, useRef, useState } from 'react';
 import { MAX_CART_QUANTITY } from '@/lib/cart-policy';
 
@@ -19,7 +19,8 @@ export default function CartDrawer() {
       if (event.key !== 'Tab' || !drawer) return;
       const nodes = [...drawer.querySelectorAll<HTMLElement>('a[href],button:not(:disabled),input:not(:disabled),[tabindex="0"]')].filter(el => el.getClientRects().length);
       const first = nodes[0], last = nodes[nodes.length - 1];
-      if (event.shiftKey && document.activeElement === first) { event.preventDefault(); last?.focus(); }
+      if (!drawer.contains(document.activeElement)) { event.preventDefault(); (event.shiftKey ? last : first)?.focus(); }
+      else if (event.shiftKey && document.activeElement === first) { event.preventDefault(); last?.focus(); }
       else if (!event.shiftKey && document.activeElement === last) { event.preventDefault(); first?.focus(); }
     };
     document.addEventListener('keydown', keydown);
@@ -166,6 +167,7 @@ export default function CartDrawer() {
               <p className="cart-drawer__note">
                 {stoneCount >= 2 ? 'Ab 2 Steinen ist dein Versand innerhalb Deutschlands kostenlos.' : 'Noch einen Stein hinzufügen und innerhalb Deutschlands Versandkosten sparen.'}
               </p>
+              <p className="cart-drawer__note">{KLEINUNTERNEHMER_COPY}</p>
               <button className="btn btn--primary btn--full btn--lg" type="button" onClick={startCheckout} disabled={checkoutState === 'loading' || checkoutState === 'unavailable'}>
                 {checkoutState === 'loading' ? 'Sicherer Checkout wird geöffnet …' : checkoutState === 'unavailable' ? 'Checkout noch nicht freigeschaltet' : 'Sicher mit Stripe bezahlen'}
               </button>

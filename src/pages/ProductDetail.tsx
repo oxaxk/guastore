@@ -4,7 +4,7 @@ import { useParams, Link } from 'react-router-dom';
 import { useCart } from '@/context/CartContext';
 import { mockProducts } from '@/data/mockData';
 import SteelGallery from '@/components/shop/SteelGallery';
-import { cataloguePrice, formatPrice, SHIPPING_DE_COPY } from '@/lib/commerce';
+import { cataloguePrice, formatPrice, KLEINUNTERNEHMER_COPY, SHIPPING_DE_COPY } from '@/lib/commerce';
 import { MAX_CART_QUANTITY } from '@/lib/cart-policy';
 
 export default function ProductDetail() {
@@ -32,7 +32,7 @@ export default function ProductDetail() {
         : 'Für deine Pflegeroutine';
 
   const imageOverride = isSteel
-    ? '/img/steel/the-steel-matched-v3.png'
+    ? '/img/steel/the-steel-jade-aligned.png'
     : isJade
       ? '/img/guagreen.png'
       : isRose
@@ -260,6 +260,7 @@ export default function ProductDetail() {
               {isOnSale && displayCompareAt && <span className="compare">{formatPrice(displayCompareAt)}</span>}
             </div>}
             {!isDigitalProduct && !isRose && <p className="product-detail__shipping"><Link to="/legal/versand">{SHIPPING_DE_COPY}</Link></p>}
+            {!isDigitalProduct && !isRose && <p className="product-detail__shipping">{KLEINUNTERNEHMER_COPY}</p>}
             <p className="product-detail__desc">{product.description}</p>
             <div className="product-detail__actions">
               {!isDigitalProduct && !isRose && (
